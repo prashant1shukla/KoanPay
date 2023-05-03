@@ -2,12 +2,13 @@ const mongoose=require("mongoose");
 
 const UserDetailsSchema= new mongoose.Schema(
     {
-        uname: String,
+        fname: String,
+        lname: String,
         email: String,
         phoneNo: String,
     },
     {
-        collation:"UserInfo",
+        collection:"UserInfo",
     }
 );
 
