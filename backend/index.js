@@ -1,7 +1,14 @@
 const express = require("express");
 const app=express();
-const mongoose=require
+const mongoose=require("mongoose");
 app.use(express.json());
+
+const mongoUrl="mongodb+srv://prashant1shukla:PassWord@koanpay.9rjwa0c.mongodb.net/?retryWrites=true&w=majority"
+
+mongoose.connect(mongoUrl,{
+    useNewUrlParser:true
+}).then(()=>{console.log("Connected to database");})
+.catch(e=>console.log(e))
 
 app.listen(5000,()=>{
     console.log("Server started!");
