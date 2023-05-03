@@ -31,4 +31,22 @@ app.post("/post", async(req,res)=>{
     }
      
 });
+
+require("./userDetails");
+
+const User=mongoose.model("UserInfo");
+
+app.post("/register",async(req, res)=>{
+    const{name, email, mobileNo}= req.body;
+    try{
+        await User.create({
+            uname: name,
+            email,
+            phoneNo: mobileNo,
+        });
+        res.send({status: "ok"});
+    }catch(error){
+        res.send({status: "error"});
+    }
+})
  
