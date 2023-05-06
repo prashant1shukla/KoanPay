@@ -91,6 +91,11 @@ export default class Login extends Component {
       .then((res)=>res.json())
       .then((data)=>{
           console.log(data, "userRegister");
+          if(data.status="ok"){
+            alert("login sucessful!");
+            window.localStorage.setItem("token",data.data);
+            window.location.href="./userDetails";
+          }
       });
 
 
@@ -118,7 +123,6 @@ export default class Login extends Component {
             className="form-control"
             placeholder="Enter password"
             onChange={(e)=>this.setState({ password:e.target.value })}
-
           />
         </div>
 

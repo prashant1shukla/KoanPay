@@ -5,7 +5,8 @@ const UserDetailsSchema= new mongoose.Schema(
         fname: String,
         lname: String,
         email: {type:String, unique:true},
-        phoneNo: String,
+        password: String,
+        usertype: String,
     },
     {
         collection:"UserInfo",

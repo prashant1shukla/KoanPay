@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
 export default class SignUp extends Component {
-
     constructor(props){
         super(props);
         this.state={
@@ -9,13 +8,14 @@ export default class SignUp extends Component {
             lname: "",
             email: "",
             password: "",
+            usertype: "User",
         };
         this.handleSubmit=this.handleSubmit.bind(this);
     }
     handleSubmit(e){
         e.preventDefault();
-        const{fname, lname,email,password}=this.state;
-        console.log(fname, lname, email, password);
+        const{fname, lname,email,password, usertype}=this.state;
+        console.log(fname, lname, email, password,usertype);
         fetch("http://localhost:5000/register",{
             method: "POST",
             crossDomain: true,
@@ -29,6 +29,7 @@ export default class SignUp extends Component {
                 email,
                 lname,
                 password,
+                // usertype,
             }),
         })
         .then((res)=>res.json())
