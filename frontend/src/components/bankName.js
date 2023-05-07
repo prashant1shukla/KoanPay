@@ -1,7 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
-// import AdminHome from "./adminHome";
-
-// import UserHome from "./userHome";
+import React, { Component} from "react";
 
 export default class UserDetails extends Component {
     constructor(props){
@@ -26,14 +23,24 @@ export default class UserDetails extends Component {
       .then((res) => res.json())
       .then((data) => {
         console.log(data, "userData");
-        this,setState({userData: data.data});
+        this.setState({userData: data.data});
       });
   }
   render(){
     return (
         <div>
-            Name <h1> {this.state.userData.fname} </h1>
-            Email<h1>{this.state.userData.email}</h1>
+            <form onSubmit={this.handleSubmit}> 
+              <h3><h2>Hello <b>{this.state.userData.fname}</b>, Admin</h2></h3>
+              <div className="mb-3">
+                <label>Type the name of the bank:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Bank Name"
+                  onChange={e=>this.setState({fname:e.target.value})}
+                />
+              </div>
+          </form>
         </div>
     );
   }

@@ -7,6 +7,7 @@ import Login from './components/login_component'
 import SignUp from './components/signup_component'
 import SignUpAdmin from './components/signup_component_admin'
 import Home from './components/home'
+import BankName from "./components/bankName";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to={'/sign-up'}>
+                  <Link className="nav-link" to={'/'}>
                     Sign up
                   </Link>
                 </li>
@@ -38,7 +39,7 @@ function App() {
               <Route path="/sign-in" element={<Login />} />
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-up-admin" element={<SignUpAdmin />} />
-
+              <Route path="/bankName" element={<BankName />} />
             </Routes>
           </div>
         </div>

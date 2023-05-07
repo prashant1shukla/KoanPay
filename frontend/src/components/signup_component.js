@@ -29,13 +29,22 @@ export default class SignUp extends Component {
                 email,
                 lname,
                 password,
-                // usertype,
+                usertype,
             }),
         })
         .then((res)=>res.json())
         .then((data)=>{
             console.log(data, "userRegister");
+            if (data.status == "ok") {
+              alert("signup successful");
+              // window.localStorage.setItem("token", data.data);
+              // window.localStorage.setItem("loggedIn", true);
+    
+              window.location.href = "./sign-in";
+            }
         });
+
+      
     }
   render() {
     return (
