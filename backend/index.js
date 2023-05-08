@@ -104,6 +104,34 @@ app.post("/bank-name",async(req, res)=>{
     }    
 })
 
+// Getting Bank Details
+app.post('/getBankdetails',async(req,res)=>{
+  const bank = req.body.bank;
+  const bankindb = await Bank.findOne({bank:bank});
+  res.send({
+    status:"ok",
+    details:bankindb
+  })
+})
+
+// Adding Parameter
+app.post('/UpdateBankDetails', async(req,res)=>{
+  const newbankdetails = req.body;
+  await Bank.updateOne(
+    {
+      bank:newbankdetails.bank
+    },
+    {
+      $set:{
+        parameters:newbankdetails.parameters
+      }
+    }
+  )
+  res.send({
+    status:"Updated",
+    newdetails:newbankdetails
+  })
+})
 
 app.listen(5000,()=>{
     console.log("Server started!");
