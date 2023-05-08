@@ -8,6 +8,8 @@ import SignUp from './components/signup_component'
 import SignUpAdmin from './components/signup_component_admin'
 import Home from './components/home'
 import BankName from "./components/bankName";
+// import AddParameter from "./components/add_parameter";
+
 
 function App() {
   return (
@@ -40,6 +42,8 @@ function App() {
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-up-admin" element={<SignUpAdmin />} />
               <Route path="/bankName" element={<BankName />} />
+              {/* <Route path="/add-parameter" element={<AddParameter />} /> */}
+
             </Routes>
           </div>
         </div>

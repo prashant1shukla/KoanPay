@@ -15,7 +15,7 @@ mongoose.connect(mongoUrl,{
     }).then(()=>{console.log("Connected to database");})
     .catch((e)=>console.log(e));
 
-require("./userDetails");
+require("./Schema/userDetails");
 const User=mongoose.model("UserInfo");
 
 app.post("/register",async(req, res)=>{
@@ -80,6 +80,30 @@ try {
     });
 } catch (error) { }
 });
+
+
+require("./Schema/bank");
+const Bank=mongoose.model("BankName");
+app.post("/bank-name",async(req, res)=>{
+    const{bank}= req.body;
+    console.log(bank);
+    try{
+        const oldBank = await Bank.findOne({ bank });
+        if (oldBank) {
+        return res.json({ error: "bank Exists" });
+
+    }
+    await Bank.create({
+        bank,
+    });
+
+    res.send({status: "ok"});
+        res.send({status: "ok"});
+    }catch(error){
+        res.send({status: "error"});
+    }    
+})
+
 
 app.listen(5000,()=>{
     console.log("Server started!");
