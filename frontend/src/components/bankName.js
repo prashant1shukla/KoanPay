@@ -6,7 +6,7 @@ export default class UserDetails extends Component {
         this.state={
             userData:"",
             bank:"",
-            
+  
         };
         this.handleSubmit=this.handleSubmit.bind(this);
     }    
@@ -54,7 +54,7 @@ export default class UserDetails extends Component {
           // window.localStorage.setItem("token", data.data);
           // window.localStorage.setItem("loggedIn", true);
 
-          window.location.href = "./add_parameter";
+          window.location.href = `/${bank}`;
         }
     }); 
 }

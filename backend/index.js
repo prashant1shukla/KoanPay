@@ -119,11 +119,11 @@ app.post('/UpdateBankDetails', async(req,res)=>{
   const newbankdetails = req.body;
   await Bank.updateOne(
     {
-      bank:newbankdetails.bank
+      bank:newbankdetails.bank.bank
     },
     {
       $set:{
-        parameters:newbankdetails.parameters
+        parameters:newbankdetails.bank.parameters
       }
     }
   )
