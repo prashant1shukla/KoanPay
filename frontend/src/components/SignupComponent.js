@@ -1,21 +1,16 @@
-import React, { Component } from 'react'
+import React, { Component, useState, render } from 'react'
 
-export default class SignUp extends Component {
-    constructor(props){
-        super(props);
-        this.state={
-            fname: "",
-            lname: "",
-            email: "",
-            password: "",
-            usertype: "User",
-        };
-        this.handleSubmit=this.handleSubmit.bind(this);
-    }
-    handleSubmit(e){
+export default function SignUp(){
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState("User");
+
+    handleSubmit=(e)=>{
         e.preventDefault();
-        const{fname, lname,email,password, usertype}=this.state;
-        console.log(fname, lname, email, password,usertype);
+        // const{fname, lname,email,password, usertype}=this.state;
+        console.log(fname, lname, email, password,userType);
         fetch("http://localhost:5000/register",{
             method: "POST",
             crossDomain: true,
@@ -29,7 +24,7 @@ export default class SignUp extends Component {
                 email,
                 lname,
                 password,
-                usertype,
+                userType,
             }),
         })
         .then((res)=>res.json())
@@ -46,7 +41,6 @@ export default class SignUp extends Component {
 
       
     }
-  render() {
     return (
       <form onSubmit={this.handleSubmit}> 
         <h3>Sign Up</h3>
@@ -57,14 +51,14 @@ export default class SignUp extends Component {
             type="text"
             className="form-control"
             placeholder="First name"
-            onChange={e=>this.setState({fname:e.target.value})}
+            onChange={(e)=>this.setFname(e.target.value)}
           />
         </div>
 
         <div className="mb-3">
           <label>Last name</label>
           <input type="text" className="form-control" placeholder="Last name" 
-           onChange={e=>this.setState({lname:e.target.value})}
+           onChange={(e)=>this.setLname(e.target.value)}
           />
         </div>
 
@@ -74,7 +68,7 @@ export default class SignUp extends Component {
             type="email"
             className="form-control"
             placeholder="Enter email"
-            onChange={e=>this.setState({email:e.target.value})}
+            onChange={(e)=>this.setEmail(e.target.value)}
 
           />
         </div>
@@ -85,7 +79,7 @@ export default class SignUp extends Component {
             type="password"
             className="form-control"
             placeholder="Enter password"
-            onChange={e=>this.setState({password:e.target.value})}
+            onChange={(e)=>this.setPassword(e.target.value)}
 
           />
         </div>
@@ -100,5 +94,5 @@ export default class SignUp extends Component {
         </p>
       </form>
     )
-  }
+  
 }
