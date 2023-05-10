@@ -7,7 +7,7 @@ import Login from './components/LoginComponent'
 import SignUp from './components/SignupComponent'
 import SignUpAdmin from './components/SignupComponentAdmin'
 import Home from './components/Home'
-import BankName from "./components/BankName";
+import BankName from "./components/bankName";
 import AddParameter from "./components/AddParameter";
 
 
