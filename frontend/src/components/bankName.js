@@ -1,8 +1,10 @@
 import React, {useState, useEffect } from "react";
 import { userdetails } from "../api/UserDetails";
 import { addbank } from "../api/AddBank";
+import { useNavigate } from "react-router-dom";
 
 export default function UserDetails() {
+  let navigate = useNavigate();
   const [bank, setBank] = useState("");
   const [userData, setUserData] = useState("");
 
@@ -19,7 +21,7 @@ export default function UserDetails() {
       console.log(data, "bank created");
       if (data.status === "ok") {
         alert("bank done");
-        window.location.href = `/${bank}`;
+        return navigate(`/${bank}`);
       }
     });
   };
