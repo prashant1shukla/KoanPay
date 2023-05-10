@@ -1,13 +1,14 @@
 import React, {useState} from "react";
 import { login } from "../api/Login";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  let navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
-
     console.log(email, password);
     login(email, password).then((data) => {
       console.log(data, "userRegister");
@@ -15,7 +16,7 @@ export default function Login() {
         alert("login successful");
         window.localStorage.setItem("token", data.data);
         window.localStorage.setItem("loggedIn", true);
-        window.location.href = "/bankName";
+        navigate("/bankName");
       }
     });
   }

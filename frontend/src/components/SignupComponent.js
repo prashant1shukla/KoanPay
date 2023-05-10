@@ -1,7 +1,9 @@
 import React, { Component, useState, render } from "react";
-import { signupuser } from "../api/SignUpUser";
+import { signup } from "../api/SignUp";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
+  let navigate = useNavigate();
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
@@ -11,18 +13,17 @@ export default function SignUp() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(fname, lname, email, password, userType);
-    signupuser(fname, email, lname, password, userType).then((data) => {
+    signup(fname,lname,email, password, userType).then((data) => {
       console.log(data, "userRegister");
       if (data.status === "ok") {
         alert("signup successful");
-        window.location.href = "/sign-in";
+        return navigate("/sign-in");
       }
     });
   };
   return (
     <form onSubmit={handleSubmit}>
       <h3>Sign Up</h3>
-
       <div className="mb-3">
         <label>First name</label>
         <input
