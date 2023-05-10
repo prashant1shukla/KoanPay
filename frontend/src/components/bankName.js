@@ -28,7 +28,9 @@ export default function UserDetails() {
     e.preventDefault();
     const{bank}=this.state;
     console.log(bank);
-    fetch("http://localhost:5000/bank-name",{
+    
+    axios({
+      url:"http://localhost:5000/bank-name",
         method: "POST",
         crossDomain: true,
         headers:{
