@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./components/LoginComponent";
 import SignUp from "./components/SignupComponent";
 import SignUpAdmin from "./components/SignupComponentAdmin";
-import Home from "./components/Home";
+//import Home from "./components/Home";
 import BankName from "./components/CreateBank";
 import AddParameter from "./components/AddParameter";
 import Superuser from "./components/Superuser";
