@@ -57,7 +57,7 @@ app.post("/login-user", async (req, res) => {
       const token = jwt.sign({ email: user.email }, JWT_SECRET);
 
       if (res.status(201)) {
-        return res.json({ status: "ok", data: token });
+        return res.json({ status: "ok", data: token, userDetails: user });
       } else {
         return res.json({ error: "error" });
       }
@@ -80,34 +80,78 @@ app.get("/userData", async (req, res) => {
       .catch((error) => {
         res.send({ status: "error", data: error });
       });
-  } catch (error) {
-  }
+  } catch (error) {}
 });
 
+// Creating The Bank
 require("./Schema/bank");
 const Bank = mongoose.model("BankName");
-app.post("/bank-name", async (req, res) => {
-  const { bank } = req.body;
-  console.log(bank);
+app.post("/create-bank", async (req, res) => {
+  const { bank, admin } = req.body;
   try {
     const oldBank = await Bank.findOne({ bank });
     if (oldBank) {
       return res.json({ error: "bank Exists" });
     }
+    // Bank Creation
     await Bank.create({
-      bank,
+      bank: bank,
+      admin: admin.email,
     });
-
-    res.send({ status: "ok" });
+    // Admin creation
+    await User.create({
+        fname:admin.fname,
+        lname:admin.lname,
+        email:admin.email,
+        userType:"admin",
+        BankName:bank,
+        password:`${bank}_${admin.email}`
+    })
     res.send({ status: "ok" });
   } catch (error) {
     res.send({ status: "error" });
   }
 });
 
+// Adding User to Bank
+app.post('/adduser',async(req,res)=>{
+    const bank = req.body.bank;
+    const user = req.body.user;
+    console.log("The bank is: ", bank)
+    // Adding user in BankDB
+    const bankindb = await Bank.findOne({bank:bank});
+    // console.log("The bank in DB is, ",bankindb);
+    let prevuser = bankindb.users
+    prevuser.push(user.email);
+    await Bank.updateOne(
+        {
+            bank:bank
+        },
+        {
+            $set:{
+                users:prevuser
+            }
+        }
+    )
+    // Adding user in UserDB
+    await User.create(
+        {
+            fname:user.fname,
+            lname:user.lname,
+            email:user.email,
+            userType:"user",
+            BankName:bank,
+            password:`${bank}_${user.email}`
+        }
+    )
+    res.send({
+        status:"ok"
+    })
+})
+
 // Getting Bank Details
-app.post("/getBankdetails", async (req, res) => {
-  const bank = req.body.bank;
+app.get("/getBankdetails", async (req, res) => {
+  const bank = req.headers.authorization;
   const bankindb = await Bank.findOne({ bank: bank });
   res.send({
     status: "ok",
@@ -116,21 +160,20 @@ app.post("/getBankdetails", async (req, res) => {
 });
 
 // Adding Parameter
-app.post("/UpdateBankDetails", async (req, res) => {
-  const newbankdetails = req.body;
+app.post("/updatestructure", async (req, res) => {
+  const {bank,parameter} = req.body
   await Bank.updateOne(
     {
-      bank: newbankdetails.bank.bank,
+      bank: bank,
     },
     {
       $set: {
-        parameters: newbankdetails.bank.parameters,
+        parameters: parameter,
       },
     }
   );
   res.send({
-    status: "Updated",
-    newdetails: newbankdetails,
+    status: "Updated"
   });
 });
 
