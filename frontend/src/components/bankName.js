@@ -1,16 +1,9 @@
-import React, { Component} from "react";
+import React, { Component, useState, render} from "react";
 
-export default class UserDetails extends Component {
-    constructor(props){
-        super(props);
-        this.state={
-            userData:"",
-            bank:"",
-  
-        };
-        this.handleSubmit=this.handleSubmit.bind(this);
-    }    
-    componentDidMount(){
+export default function UserDetails() {
+  const [bank, setBank] = useState("");
+  const [userData, setUserData] = useState(""); 
+   
     fetch("http://localhost:5000/userData", {
       method: "POST",
       crossDomain: true,
@@ -26,11 +19,11 @@ export default class UserDetails extends Component {
       .then((res) => res.json())
       .then((data) => {
         console.log(data, "userData");
-        this.setState({userData: data.data});
+        this.setUserData( data.data);
       });
-  }
   
-  handleSubmit(e){
+  
+  handleSubmit=(e)=>{
     e.preventDefault();
     const{bank}=this.state;
     console.log(bank);
@@ -59,7 +52,7 @@ export default class UserDetails extends Component {
     }); 
 }
 
-  render(){
+  
     return (
         <div>
             <form onSubmit={this.handleSubmit}> 
@@ -70,7 +63,7 @@ export default class UserDetails extends Component {
                   type="text"
                   className="form-control"
                   placeholder="Bank Name"
-                  onChange={e=>this.setState({bank:e.target.value})}
+                  onChange={(e)=>setBank({bank:e.target.value})}
                 />
               </div>
               <div className="d-grid">
@@ -82,5 +75,4 @@ export default class UserDetails extends Component {
         
         </div>
     );
-  }
 }
