@@ -11,14 +11,13 @@ export default function SignUp() {
 
     
     const handleSubmit = (e) => {
-      if (userType == "Admin" && secretKey != "secretkey") {
+      if (userType === "Admin" && secretKey !== "secretkey") {
         e.preventDefault();
         alert("Invalid Admin");
       } else {
         e.preventDefault();
-        // const{fname, lname,email,password,userType,secretKey}=this.state;
         console.log(fname, lname, email, password,userType,secretKey);
-        axios({
+        fetch({
           url:"http://localhost:5000/register",
           method: "POST",
           crossDomain: true,
