@@ -83,7 +83,7 @@ app.get("/userData", async (req, res) => {
   } catch (error) {}
 });
 
-// Creating The Bank
+// Creating Bank
 require("./Schema/bank");
 const Bank = mongoose.model("BankName");
 app.post("/create-bank", async (req, res) => {
