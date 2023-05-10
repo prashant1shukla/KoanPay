@@ -1,9 +1,12 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { login } from "../api/Login";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../App";
+import { useContext } from "react";
 
 export default function Login() {
   let navigate = useNavigate();
+  const contextuser = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -16,7 +19,17 @@ export default function Login() {
         alert("login successful");
         window.localStorage.setItem("token", data.data);
         window.localStorage.setItem("loggedIn", true);
-        navigate("/bankName");
+        console.log("The user details are : ", data.userDetails);
+        contextuser[1](data.userDetails);
+        if(data.userDetails.userType === 'user'){
+          return navigate('/user')
+        }
+        else if(data.userDetails.userType === 'admin'){
+            return navigate('/admin')
+        }
+        else if(data.userDetails.userType === 'superuser'){
+            return navigate('/superuser');
+        }
       }
     });
   }
@@ -53,14 +66,14 @@ export default function Login() {
 
       <div className="mb-3">
         <div className="custom-control custom-checkbox">
-          <input
+          {/* <input
             type="checkbox"
             className="custom-control-input"
             id="customCheck1"
-          />
-          <label className="custom-control-label" htmlFor="customCheck1">
+          /> */}
+          {/* <label className="custom-control-label" htmlFor="customCheck1">
             Remember me
-          </label>
+          </label> */}
         </div>
       </div>
 
@@ -69,9 +82,9 @@ export default function Login() {
           Submit
         </button>
       </div>
-      <p className="forgot-password text-right">
+      {/* <p className="forgot-password text-right">
         <a href="/sign-up">Sign Up</a>
-      </p>
+      </p> */}
     </form>
     // </div>
     // </div>
