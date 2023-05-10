@@ -1,17 +1,7 @@
 import React, { Component, useState, render } from 'react'
 
 export default function SignUp() {
-    // constructor(props){
-    //     super(props);
-    //     this.state={
-    //         fname: "",
-    //         lname: "",
-    //         email: "",
-    //         password: "",
-    //         usertype: "Admin",
-    //         secretkey:"",
-    //     };
-    //     this.handleSubmit=this.handleSubmit.bind(this);
+    
     const [fname, setFname] = useState("");
     const [lname, setLname] = useState("");
     const [email, setEmail] = useState("");
