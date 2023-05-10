@@ -69,6 +69,8 @@ export default function AddParameter() {
 //         setBankDetails(data.details);
 //       });
 //   };
+
+
   return (
     <div>
       <h3>Hello {bankDetails?.bank} Bank</h3>
