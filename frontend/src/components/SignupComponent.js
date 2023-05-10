@@ -1,4 +1,4 @@
-import React, { Component, useState, render } from "react";
+import React, {useState } from "react";
 import { signup } from "../api/SignUp";
 import { useNavigate } from "react-router-dom";
 

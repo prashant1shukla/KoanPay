@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export default function AddParameter() {
@@ -27,7 +27,7 @@ export default function AddParameter() {
         console.log(data, "these are the bank details");
         setBankDetails(data.details);
       });
-  }, []);
+  }, [bank_name]);
 
   const SettingVariable = (varName, varValue) => {
     let temp = {
@@ -49,26 +49,26 @@ export default function AddParameter() {
     setBankDetails(temp);
   };
 
-  const UpdateInDatabase = () => {
-    UpdateInDatabase();
-    fetch("http://localhost:5000/UpdateBankDetails", {
-      method: "POST",
-      crossDomain: true,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({
-        bank: bankDetails,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data, "these are the updated bank details in database");
-        setBankDetails(data.details);
-      });
-  };
+//   const UpdateInDatabase = () => {
+//     UpdateInDatabase();
+//     fetch("http://localhost:5000/UpdateBankDetails", {
+//       method: "POST",
+//       crossDomain: true,
+//       headers: {
+//         "Content-Type": "application/json",
+//         Accept: "application/json",
+//         "Access-Control-Allow-Origin": "*",
+//       },
+//       body: JSON.stringify({
+//         bank: bankDetails,
+//       }),
+//     })
+//       .then((res) => res.json())
+//       .then((data) => {
+//         console.log(data, "these are the updated bank details in database");
+//         setBankDetails(data.details);
+//       });
+//   };
   return (
     <div>
       <h3>Hello {bankDetails?.bank} Bank</h3>

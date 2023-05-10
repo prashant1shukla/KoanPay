@@ -1,4 +1,4 @@
-import React, { Component, useState, render } from "react";
+import React, {useState } from "react";
 import { signup } from "../api/SignUp";
 import { useNavigate } from "react-router-dom";
 
@@ -75,7 +75,7 @@ export default function SignUp() {
         />
       </div>
 
-      {userType == "Admin" ? (
+      {userType === "Admin" ? (
         <div className="mb-3">
           <label>Secret Key</label>
           <input
