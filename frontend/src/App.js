@@ -3,12 +3,12 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
-import Login from './components/login_component'
-import SignUp from './components/signup_component'
-import SignUpAdmin from './components/signup_component_admin'
-import Home from './components/home'
-import BankName from "./components/bankName";
-import AddParameter from "./components/add_parameter";
+import Login from './components/LoginComponent'
+import SignUp from './components/SignupComponent'
+import SignUpAdmin from './components/SignupComponentAdmin'
+import Home from './components/Home'
+import BankName from "./components/BankName";
+import AddParameter from "./components/AddParameter";
 
 
 function App() {
