@@ -9,7 +9,8 @@ export default function AddParameter() {
     const { bank_name } = useParams();
 
     useEffect(() => {
-        fetch("http://localhost:5000/getBankdetails", {
+        axios({
+            url:"http://localhost:5000/getBankdetails",
             method: "POST",
             crossDomain: true,
             headers: {

@@ -18,7 +18,8 @@ export default function SignUp() {
         e.preventDefault();
         // const{fname, lname,email,password,userType,secretKey}=this.state;
         console.log(fname, lname, email, password,userType,secretKey);
-        fetch("http://localhost:5000/register", {
+        axios({
+          url:"http://localhost:5000/register",
           method: "POST",
           crossDomain: true,
           headers: {

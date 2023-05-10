@@ -11,22 +11,39 @@ export default function SignUp(){
         e.preventDefault();
         // const{fname, lname,email,password, usertype}=this.state;
         console.log(fname, lname, email, password,userType);
-        fetch("http://localhost:5000/register",{
-            method: "POST",
+        axios({
+          url:"http://localhost:5000/register",
+          method: "POST",
+          headers:{
             crossDomain: true,
-            headers:{
-                "Content-Type":"application/json",
-                Accept: "application/json",
-                "Access-Control-Allow-Origin": "*",
-            },
-            body: JSON.stringify({
-                fname,
-                email,
-                lname,
-                password,
-                userType,
-            }),
+              "Content-Type":"application/json",
+              Accept: "application/json",
+              "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify({
+              fname,
+              email,
+              lname,
+              password,
+              userType,
+          }),
         })
+        // fetch("http://localhost:5000/register",{
+        //     method: "POST",
+        //     crossDomain: true,
+        //     headers:{
+        //         "Content-Type":"application/json",
+        //         Accept: "application/json",
+        //         "Access-Control-Allow-Origin": "*",
+        //     },
+        //     body: JSON.stringify({
+        //         fname,
+        //         email,
+        //         lname,
+        //         password,
+        //         userType,
+        //     }),
+        // })
         .then((res)=>res.json())
         .then((data)=>{
             console.log(data, "userRegister");

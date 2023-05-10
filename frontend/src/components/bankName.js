@@ -4,7 +4,8 @@ export default function UserDetails() {
   const [bank, setBank] = useState("");
   const [userData, setUserData] = useState(""); 
    
-    fetch("http://localhost:5000/userData", {
+  axios({
+    url:"http://localhost:5000/userData",
       method: "POST",
       crossDomain: true,
       headers: {
@@ -23,7 +24,7 @@ export default function UserDetails() {
       });
   
   
-  handleSubmit=(e)=>{
+  const handleSubmit=(e)=>{
     e.preventDefault();
     const{bank}=this.state;
     console.log(bank);
