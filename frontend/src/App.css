@@ -1,38 +1,79 @@
-.App {
-  text-align: center;
+/*  Login comp  */
+.gradient-custom-2 {
+  /* fallback for old browsers */
+  background: #09c6f9;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(315deg, #045de9 0%, #09c6f9 74%);
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(315deg, #045de9 0%, #09c6f9 74%);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+@media (min-width: 768px) {
+  .gradient-form {
+    height: 100vh !important;
+  }
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@media (min-width: 769px) {
+  .gradient-custom-2 {
+    border-top-right-radius: .3rem;
+    border-bottom-right-radius: .3rem;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.superuser-login {
+  width: 60%;
+  padding-top: 6rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.App-link {
-  color: #61dafb;
+/* Superuser comp */
+
+.superuser_container {
+  background: #09c6f9;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.superuser_subcontainer {
+  border-radius: 0.5rem;
+  background: #fff;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-util {
+  background: #045de9;
+}
+
+/* CreateBank comp */
+.bank-signup {
+  width: 60%;
+}
+
+/* Admin comp */
+
+.admin_container {
+  background: #09c6f9;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.admin_subcontainer {
+  border-radius: 0.5rem;
+  background: #fff;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-util {
+  background: #045de9;
+}
+
+.row {
+  max-width: 80%;
 }
