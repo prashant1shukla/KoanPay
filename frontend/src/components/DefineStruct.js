@@ -2,112 +2,276 @@ import React, { useEffect, useState } from "react";
 import { getdetails } from "../api/getbankdetails";
 import { useContext } from "react";
 import { UserContext } from "../App";
-import { useParams } from "react-router-dom";
-
-
-import { MDBBtn, MDBInput } from 'mdb-react-ui-kit';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import {
+  MDBTable,
+  MDBTableHead,
+  MDBTableBody,
+  MDBBtn,
+  MDBAccordion,
+  MDBAccordionItem,
+  MDBModal,
+  MDBModalDialog,
+  MDBModalContent,
+  MDBModalHeader,
+  MDBModalTitle,
+  MDBModalBody,
+  MDBModalFooter,
+  MDBInput,
+} from "mdb-react-ui-kit";
+import { addparam } from "../api/addparameter";
 
 function DefineStruct() {
   const contextuser = useContext(UserContext);
 
   const [bankDetails, setBankDetails] = useState(null);
-  const [parameters, setParameters] = useState([]);
-  const [variable, setVariable] = useState(null);
+  const [parameters, setParameters] = useState(null);
+  const [currparameter, setCurrParameter] = useState(null);
+  const [currparameter_name, setCurrParameter_name] = useState("");
+  const [variable, setVariable] = useState({
+    var_name: "",
+    max_size: "",
+    min_size: "",
+    value: "",
+  });
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // popUp for adding Variable
+  const [basicModalVariable, setBasicModalVariable] = useState(false);
+
+  const toggleShowPopupVariable = (curr_par) => {
+    setCurrParameter(curr_par);
+    setBasicModalVariable(!basicModalVariable);
+  };
+  //   popUp for adding Parameter
+  const [basicModalParam, setBasicModalParam] = useState(false);
+
+  const toggleShowPopupParam = () => {
+    setBasicModalParam(!basicModalParam);
+  };
 
   useEffect(() => {
     getdetails(contextuser[0]?.BankName).then((data) => {
+      setBankDetails(data?.details);
       setParameters(data?.details.parameters);
     });
-  });
+  }, [contextuser]);
 
-  
-  const { bank_name } = useParams();
+  //   Pushing varibale to the repective paramater
+  const pushvarible = () => {
+    let prev_variables = currparameter?.variables;
+    prev_variables?.push(variable);
+    setCurrParameter({ ...currparameter, variable: prev_variables });
+    var temp_parameters = parameters;
+    var index1;
+    console.log("The prev Parameters are: ", temp_parameters);
+    temp_parameters.map((temp_param, index) => {
+      if (temp_param?.par_name === currparameter?.par_name) {
+        index1 = index;
+        return;
+      }
+    });
+    temp_parameters[index1] = currparameter;
+    setParameters(temp_parameters);
+    addparam(contextuser[0]?.BankName, parameters).then((res) => {
+      console.log("The response is: ", res);
+      setBasicModalVariable(!basicModalVariable);
+      setVariable({
+        var_name: "",
+        max_size: "",
+        min_size: "",
+        value: "",
+      });
+    });
+  };
 
-  const SettingVariable = (varName, varValue) => {
-    let temp = {
-      varName: varName,
-      varValue: varValue,
+  //   Creating a New Parameter
+  const AddCurrParameter = () => {
+    var combined_curr_param = {
+      par_name: currparameter_name,
+      variables: [],
     };
-    setVariable(temp);
+    setCurrParameter(combined_curr_param);
+    console.log("The Curr param name is : ", currparameter_name);
+    var prev_params = parameters;
+    prev_params.push(combined_curr_param);
+    setParameters(prev_params);
+    console.log("The prev_params: ", prev_params);
+    addparam(contextuser[0]?.BankName, prev_params).then((res) => {
+      console.log("The response is: ", res);
+      setBasicModalParam(!basicModalParam);
+      setCurrParameter(null);
+      setCurrParameter_name("");
+    });
   };
 
-  const SettingParamater = () => {
-    console.log(" these are the updated variables!", variable);
-    setParameters([...parameters, variable]);
-  };
-
-  const SettingBankDetails = () => {
-    var temp = bankDetails;
-    temp["parameters"] = parameters;
-    console.log(" these are the updated parameters!", parameters);
-    setBankDetails(temp);
-  };
   return (
     <div className="struct_container">
-      <button>Add Paramater</button>
-      <button>Add Variable</button>
+      <h1>Create the structure of {contextuser[0]?.BankName}</h1>
+      {parameters ? (
+        <>
+          <MDBAccordion>
+            {parameters.map((par, index) => {
+              return (
+                <MDBAccordionItem
+                  collapseId={index + 1}
+                  headerTitle={par?.par_name}
+                >
+                  <MDBTable>
+                    <MDBTableHead>
+                      <tr>
+                        <th scope="col">Variable</th>
+                        <th scope="col">Maximum Size</th>
+                        <th scope="col">Minimum Size</th>
+                        <th scope="col">Value</th>
+                      </tr>
+                    </MDBTableHead>
+                    <MDBTableBody>
+                      {par?.variables.map((vari) => {
+                        return (
+                          <tr>
+                            <th scope="row">{vari.var_name}</th>
+                            <td>{vari.max_size}</td>
+                            <td>{vari.min_size}</td>
+                            <td>{vari.value}</td>
+                          </tr>
+                        );
+                      })}
+                    </MDBTableBody>
+                  </MDBTable>
+                  <MDBBtn onClick={() => toggleShowPopupVariable(par)}>
+                    Add Variable
+                  </MDBBtn>
+                </MDBAccordionItem>
+              );
+            })}
+          </MDBAccordion>
+          <br />
+          <MDBBtn
+            onClick={() => {
+              toggleShowPopupParam();
+            }}
+          >
+            Add Paramater
+          </MDBBtn>
+        </>
+      ) : (
+        <></>
+      )}
 
-      <div className="admin_container">
-        <div className="admin_subcontainer text-center">
-          <h1 className="pt-5">Hello, {contextuser[0]?.fname} <b>(admin)</b></h1>
-          {/* <h2>Admin for {contextuser[0]?.BankName}</h2> */}
-          {/* <button onClick={() => {AddUser()}}>Add user</button>
-        <button onClick={() => {return navigate('/define-struct')}}>Define Structure</button>
-        <button onClick={() => {}}>View Structure</button> */}
-          <div className="row gap-5 mx-auto">
-            <MDBBtn className="btn-util my-5 col" onClick={() => { handleShow() }}>Click here to give the name to your structure</MDBBtn>
-            {/* <MDBBtn className="btn-util my-5 col" onClick={() => { return navigate('/define-struct') }}>Define Structure</MDBBtn> */}
-
-
-            <Modal show={show} onHide={handleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title>Create User</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <h4>Please enter the name of your structure:</h4>
-
-                <MDBInput wrapperClass='mb-4' label='Admin First Name' id='field2' type='text' onChange={(e) => setParameters(e.target.value)}
-                  required={true} />
-                {/*
-              <MDBInput wrapperClass='mb-4' label='Admin Last Name' id='field3' type='text' onChange={(e) => setUserlname(e.target.value)}
-            required={true}/>
-              <MDBInput wrapperClass='mb-4' label='Email Address' id='field4' type='email' onChange={(e) => setUseremail(e.target.value)}
-            required={true}/>
-              <MDBBtn className="btn-util my-5 col" onClick={() => { AddUser() }}>Add user</MDBBtn> */}
-                <button onClick={() => {
-                    SettingVariable("ip", "1234");
-                  }}>Add variable
-                </button>
-                <button onClick={SettingParamater}>Add Paramater</button>
-                <button onClick={SettingBankDetails}>Update Bank Details</button>
-
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                  Close
-                </Button>
-                <Button variant="primary" onClick={handleClose}>
-                  Save Changes
-                </Button>
-              </Modal.Footer>
-            </Modal>
-          </div>
-
-        </div>
-
-      </div>
+      {/* PopUp for Creating an Extra Variable */}
+      <MDBModal
+        show={basicModalVariable}
+        setShow={setBasicModalVariable}
+        tabIndex="-1"
+      >
+        <MDBModalDialog>
+          <MDBModalContent>
+            <MDBModalHeader>
+              <MDBModalTitle>Add Variable</MDBModalTitle>
+              <MDBBtn
+                className="btn-close"
+                color="none"
+                onClick={toggleShowPopupVariable}
+              ></MDBBtn>
+            </MDBModalHeader>
+            <MDBModalBody>
+              <MDBInput
+                label="Variable Name"
+                id="VariableName"
+                type="text"
+                value={variable.var_name}
+                onChange={(e) =>
+                  setVariable({ ...variable, var_name: e.target.value })
+                }
+              />
+              <br />
+              <MDBInput
+                label="Minimum Size"
+                id="MinimumSize"
+                type="text"
+                value={variable.min_size}
+                onChange={(e) =>
+                  setVariable({ ...variable, min_size: e.target.value })
+                }
+              />
+              <br />
+              <MDBInput
+                label="Maximum Size"
+                id="MaximumSize"
+                type="text"
+                value={variable.max_size}
+                onChange={(e) =>
+                  setVariable({ ...variable, max_size: e.target.value })
+                }
+              />
+              <br />
+              <MDBInput
+                label="Default value"
+                id="Defaultvalue"
+                type="text"
+                value={variable.value}
+                onChange={(e) =>
+                  setVariable({ ...variable, value: e.target.value })
+                }
+              />
+            </MDBModalBody>
+            <MDBModalFooter>
+              <MDBBtn color="secondary" onClick={toggleShowPopupVariable}>
+                Close
+              </MDBBtn>
+              <MDBBtn
+                onClick={() => {
+                  pushvarible();
+                }}
+              >
+                Save changes
+              </MDBBtn>
+            </MDBModalFooter>
+          </MDBModalContent>
+        </MDBModalDialog>
+      </MDBModal>
+      {/* PopUp for Creating an Extra Parameter */}
+      <MDBModal
+        show={basicModalParam}
+        setShow={setBasicModalParam}
+        tabIndex="-1"
+      >
+        <MDBModalDialog>
+          <MDBModalContent>
+            <MDBModalHeader>
+              <MDBModalTitle>Add Paramater</MDBModalTitle>
+              <MDBBtn
+                className="btn-close"
+                color="none"
+                onClick={toggleShowPopupParam}
+              ></MDBBtn>
+            </MDBModalHeader>
+            <MDBModalBody>
+              <MDBInput
+                label="Parameter Name"
+                id="ParameterName"
+                type="text"
+                value={currparameter_name}
+                onChange={(e) => {
+                  setCurrParameter_name(e.target.value);
+                }}
+              />
+            </MDBModalBody>
+            <MDBModalFooter>
+              <MDBBtn color="secondary" onClick={toggleShowPopupParam}>
+                Close
+              </MDBBtn>
+              <MDBBtn
+                onClick={() => {
+                  AddCurrParameter();
+                }}
+              >
+                Save changes
+              </MDBBtn>
+            </MDBModalFooter>
+          </MDBModalContent>
+        </MDBModalDialog>
+      </MDBModal>
     </div>
-
-
-
-
-
   );
 }
 
