@@ -55,6 +55,7 @@ function Admin() {
         <button onClick={() => {return navigate('/define-struct')}}>Define Structure</button>
         <button onClick={() => {}}>View Structure</button> */}
         <div className="row gap-5 mx-auto row-width">
+
           <MDBBtn className="btn-util my-5 col" onClick={() => { handleShow() }}>Add user</MDBBtn>
           <MDBBtn className="btn-util my-5 col" onClick={() => { return navigate('/define-struct') }}>Define Structure</MDBBtn>
           <MDBBtn className="btn-util my-5 col" onClick={() => { }}>Edit existing structure</MDBBtn>
@@ -102,6 +103,12 @@ function Admin() {
             <>No Existing Banks</>
           )}
         </div> */}
+          <MDBBtn className="btn-util my-5 col" onClick={() => {AddUser()}}>Add user</MDBBtn>
+          <MDBBtn className="btn-util my-5 col" onClick={() => {return navigate('/define-struct')}}>Define Structure</MDBBtn>
+          <MDBBtn className="btn-util my-5 col" onClick={() => {}}>Edit existing structure</MDBBtn>
+          <MDBBtn className="btn-util my-5 col" onClick={() => {}}>View user logs</MDBBtn>
+          </div>
+
       </div>
 
     </div>
