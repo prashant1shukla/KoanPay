@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
+//import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+//import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-
 import Login from "./components/LoginComponent";
 import SignUp from "./components/SignupComponent";
 import SignUpAdmin from "./components/SignupComponentAdmin";
-import Home from "./components/Home";
+//import Home from "./components/Home";
 import BankName from "./components/CreateBank";
 import AddParameter from "./components/AddParameter";
 import Superuser from "./components/Superuser";
@@ -24,7 +23,8 @@ function App() {
     <Router>
       <UserContext.Provider value={[user,setUser]}>
         <div className="App">
-          <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+
+          {/* <nav className="navbar navbar-expand-lg navbar-light fixed-top">
             <div className="container">
               <div
                 className="collapse navbar-collapse"
@@ -44,7 +44,7 @@ function App() {
                 </ul>
               </div>
             </div>
-          </nav>
+          </nav> */}
 
           <div className="auth-wrapper">
             <div className="auth-inner">
