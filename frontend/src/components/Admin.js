@@ -55,53 +55,11 @@ function Admin() {
         <button onClick={() => {return navigate('/define-struct')}}>Define Structure</button>
         <button onClick={() => {}}>View Structure</button> */}
         <div className="row gap-5 mx-auto">
-          <MDBBtn className="btn-util my-5 col" onClick={() => { handleShow() }}>Add user</MDBBtn>
-          <MDBBtn className="btn-util my-5 col" onClick={() => { return navigate('/define-struct') }}>Define Structure</MDBBtn>
-          <MDBBtn className="btn-util my-5 col" onClick={() => { }}>Edit existing structure</MDBBtn>
-          <MDBBtn className="btn-util my-5 col" onClick={() => { }}>View user logs</MDBBtn>
-
-          <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>Create User</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <h4>Please enter the details of the user</h4>
-        
-              <MDBInput wrapperClass='mb-4' label='User First Name' id='field2' type='text' onChange={(e) => setUserfname(e.target.value)}
-            required={true}/>
-              <MDBInput wrapperClass='mb-4' label='User Last Name' id='field3' type='text' onChange={(e) => setUserlname(e.target.value)}
-            required={true}/>
-              <MDBInput wrapperClass='mb-4' label='Email Address' id='field4' type='email' onChange={(e) => setUseremail(e.target.value)}
-            required={true}/>
-              <MDBBtn className="btn-util my-5 col" onClick={() => { AddUser() }}>Add user</MDBBtn>
-
-             </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Close
-              </Button>
-              <Button variant="primary" onClick={handleClose}>
-                Save Changes
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        </div>
-        {/* <div className="existing_bank_conatiner pt-5">
-          {bankdetails ? (
-            <>
-              {bankdetails.map((bank) => {
-                return (
-                  <>
-                    <p>BankName : {bank.bank}, Admin: {bank.admin}</p>
-                  </>
-                );
-              //  {bank.parameters.map((par_name,value))} 
-              })}
-            </>
-          ) : (
-            <>No Existing Banks</>
-          )}
-        </div> */}
+          <MDBBtn className="btn-util my-5 col" onClick={() => {AddUser()}}>Add user</MDBBtn>
+          <MDBBtn className="btn-util my-5 col" onClick={() => {return navigate('/define-struct')}}>Define Structure</MDBBtn>
+          <MDBBtn className="btn-util my-5 col" onClick={() => {}}>Edit existing structure</MDBBtn>
+          <MDBBtn className="btn-util my-5 col" onClick={() => {}}>View user logs</MDBBtn>
+          </div>
       </div>
 
     </div>
