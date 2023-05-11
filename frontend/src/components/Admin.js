@@ -24,6 +24,11 @@ function Admin() {
         console.log("The status is, ",data);
     })
   }
+/*
+  api-folder
+    ->addparameter.js -> Adding Parameter or Updating the structure
+    ->getbandetails.js -> Can get the bank details to show the structure -> use this in UseEffect
+*/
   return (
     <div className="admin_container">
       <div className="admin_subcontainer text-center"> 
