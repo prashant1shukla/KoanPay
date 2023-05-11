@@ -202,6 +202,7 @@ app.post("/updateVariable", async (req, res) => {
       });
     }
   });
+
   //   Updating the logs
   var newlog = {
     user: user,
@@ -224,6 +225,15 @@ app.post("/updateVariable", async (req, res) => {
   );
   res.send({
     status: "updated",
+  });
+});
+
+// Getting all Struct Details
+app.get("/getAllStructs", async (req, res) => {
+  const data = await Struct.find();
+  res.send({
+    status: "ok",
+    structs: data,
   });
 });
 
