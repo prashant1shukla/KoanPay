@@ -46,9 +46,8 @@ app.post("/register", async (req, res) => {
 
 app.post("/login-user", async (req, res) => {
   const { email, password } = req.body;
-
   try {
-    // const oldUser = await User.findOne({ email });
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.json({ error: "User Not Found" });
@@ -99,13 +98,15 @@ app.post("/create-bank", async (req, res) => {
       admin: admin.email,
     });
     // Admin creation
+    // password: `${bank}_${admin.email}`
+    const encryptedPassword = await bcrypt.hash(`${bank}_${admin.email}`, 10);
     await User.create({
       fname: admin.fname,
       lname: admin.lname,
       email: admin.email,
       userType: "admin",
       BankName: bank,
-      password: `${bank}_${admin.email}`,
+      password: encryptedPassword,
     });
     res.send({ status: "ok" });
   } catch (error) {
