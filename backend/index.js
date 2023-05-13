@@ -171,7 +171,7 @@ app.post("/updatestructure", async (req, res) => {
     }
   );
   res.send({
-    status: "Updated",
+    status: "Updated"
   });
 });
 
@@ -187,7 +187,7 @@ app.get("/getAllBanks", async (req, res) => {
 // Updating the Variable in a specific Parameter
 app.post("/updateVariable", async (req, res) => {
   const { bank, parameter, variable, user } = req.body;
-  const bankindb = await Bank.find({ bank: bank });
+  var bankindb = await Bank.find({ bank: bank });
   var prevparams = bankindb[0].parameters;
   var prevlogs = bankindb[0].logs;
   var par_index, var_index;
@@ -223,8 +223,10 @@ app.post("/updateVariable", async (req, res) => {
       },
     }
   );
+  bankindb = await Bank.find({ bank: bank });
   res.send({
     status: "updated",
+    details:bankindb[0]
   });
 });
 
