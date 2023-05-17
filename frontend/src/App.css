@@ -34,7 +34,7 @@
 .superuser_container {
   background: #09c6f9;
   padding-top: 3rem;
-  padding-bottom: 3rem;
+  padding-bottom: 8rem;
 }
 
 .superuser_subcontainer {
@@ -59,7 +59,7 @@
 .admin_container {
   background: #09c6f9;
   padding-top: 3rem;
-  padding-bottom: 3rem;
+  padding-bottom: 8rem;
 }
 
 .admin_subcontainer {
@@ -70,10 +70,6 @@
   margin-right: auto;
 }
 
-.btn-util {
-  background: #045de9;
-}
-
 .row-width {
   max-width: 80%;
 }
@@ -81,4 +77,44 @@
   width: 80vw;
   margin: auto ;
   margin-top: 20px;
+}
+
+/* User */
+
+.user-container {
+  background: #09c6f9;
+  padding-top: 3rem;
+  padding-bottom: 8rem;
+}
+
+.user-subcontainer {
+  border-radius: 0.5rem;
+  background: #fff;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 3rem;
+}
+
+.btn-gap {
+  margin-left: 1rem;
+}
+
+.set-width {
+  width: 30%;
+}
+
+.title-padding {
+  padding-bottom: 1rem;
+}
+
+/* Navbar */
+.img-padding {
+ padding-right: 1rem;
+ padding-left: 1rem;
+}
+
+/* Footer */ 
+.bg-color {
+  background: #2196F3;
 }
