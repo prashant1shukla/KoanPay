@@ -115,12 +115,12 @@ function DefineStruct() {
                   collapseId={index + 1}
                   headerTitle={par?.par_name}
                 >
-                  <MDBTable>
+                  <MDBTable hover responsive>
                     <MDBTableHead>
                       <tr>
                         <th scope="col">Variable</th>
-                        <th scope="col">Maximum Size</th>
                         <th scope="col">Minimum Size</th>
+                        <th scope="col">Maximum Size</th>
                         <th scope="col">Value</th>
                       </tr>
                     </MDBTableHead>
@@ -129,8 +129,8 @@ function DefineStruct() {
                         return (
                           <tr>
                             <th scope="row">{vari.var_name}</th>
-                            <td>{vari.max_size}</td>
                             <td>{vari.min_size}</td>
+                            <td>{vari.max_size}</td>
                             <td>{vari.value}</td>
                           </tr>
                         );
