@@ -130,7 +130,7 @@ function AddTerminal() {
       ) : (
         <></>
       )}
-      
+
       {/* PopUp for Creating an Extra Terminal  */}
       <MDBModal
         show={basicModalTermi}
