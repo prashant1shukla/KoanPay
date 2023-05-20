@@ -14,6 +14,8 @@ import User from "./components/EditVariable";
 // Creating a Context
 import { createContext } from "react";
 import DefineStruct from "./components/DefineStruct";
+import CreateTerminal from "./components/CreateTerminal";
+
 export const UserContext = createContext();
 
 function App() {
@@ -31,6 +33,7 @@ function App() {
                 <Route path="/user" element={[<Header />, <User />, <Footer />]} />
                 <Route path="/admin" element={[<Header />, <Admin />, <Footer />]} />
                 <Route path="/define-struct" element={[<Header />, <DefineStruct />, <Footer />]} />
+                <Route path="/create-terminal" element={[<Header />, <CreateTerminal />, <Footer />]} />
                 <Route path="/createbank" element={[<Header />, <BankName />, <Footer />]} />
                 <Route path="/:bank_name" element={[<Header />, <AddParameter />, <Footer />]} />
               </Routes>

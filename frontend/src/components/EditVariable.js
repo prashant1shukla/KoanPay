@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../App";
+import { useNavigate } from "react-router-dom";
 import { getdetails } from "../api/getbankdetails";
 import {
   MDBBtn,
@@ -18,6 +19,8 @@ import { updatevariable } from "../api/updateVariables";
 
 function User() {
   const contextuser = useContext(UserContext);
+  let navigate = useNavigate();
+
   /*
         user needed --> context API
         bank needed --> context API
@@ -71,6 +74,7 @@ function User() {
     <div className="user-container">
       <div className="user-subcontainer">
         <h1 className="text-center title-padding">Hello user, you can now edit the variables of {contextuser[0]?.BankName}</h1>
+        <MDBBtn className="btn-util my-5 col" onClick={() => { return navigate('/create-terminal') }}>View and Create Terminal</MDBBtn>
         {bankdetails?.parameters.map((param) => {
           return (
             <>

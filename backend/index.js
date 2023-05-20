@@ -176,6 +176,24 @@ app.post("/updatestructure", async (req, res) => {
   });
 });
 
+// Adding Terminal
+app.post("/updateterminal", async (req, res) => {
+  const { bank, terminal } = req.body;
+  await Bank.updateOne(
+    {
+      bank: bank,
+    },
+    {
+      $set: {
+        terminals: terminal,
+      },
+    }
+  );
+  res.send({
+    status: "Updated"
+  });
+});
+
 // Getting all Bank Details
 app.get("/getAllBanks", async (req, res) => {
   const data = await Bank.find();
@@ -239,6 +257,75 @@ app.get("/getAllStructs", async (req, res) => {
     structs: data,
   });
 });
+
+
+//TERMINAL:
+// Creating Terminal
+require("./Schema/terminal");
+const Terminal = mongoose.model("Terminal");
+app.post("/create-terminal", async (req, res) => {
+  const {tid, mid} = req.body;
+  try {
+    const oldTerminal = await Terminal.findOne({ tid });
+    if (oldTerminal) {
+      return res.json({ error: "terminal Exists" });
+    }
+    // Terminal Creation
+    await Terminal.create({
+      tid: tid,
+      mid: mid,
+    });
+  } catch (error) {
+    res.send({ status: "error" });
+  }
+});
+
+// Adding User to Bank
+app.post("/adduser", async (req, res) => {
+  const bank = req.body.bank;
+  const user = req.body.user;
+  console.log("The bank is: ", bank);
+  // Adding user in BankDB
+  const bankindb = await Bank.findOne({ bank: bank });
+  // console.log("The bank in DB is, ",bankindb);
+  let prevuser = bankindb.users;
+  prevuser.push(user.email);
+  await Bank.updateOne(
+    {
+      bank: bank,
+    },
+    {
+      $set: {
+        users: prevuser,
+      },
+    }
+  );
+  // Adding user in UserDB
+  await User.create({
+    fname: user.fname,
+    lname: user.lname,
+    email: user.email,
+    userType: "user",
+    BankName: bank,
+    password: `${bank}_${user.email}`,
+  });
+  res.send({
+    status: "ok",
+  });
+});
+
+// Getting Bank Details
+app.get("/getBankdetails", async (req, res) => {
+  const bank = req.headers.authorization;
+  const bankindb = await Bank.findOne({ bank: bank });
+  res.send({
+    status: "ok",
+    details: bankindb,
+  });
+});
+
+
+
 
 app.listen(5000, () => {
   console.log("Server started!");
