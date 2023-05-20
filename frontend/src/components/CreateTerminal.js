@@ -24,8 +24,8 @@ function AddTerminal() {
   const contextuser = useContext(UserContext);
 
   const [bankDetails, setBankDetails] = useState(null);
-//   const [parameters, setParameters] = useState(null);
-  const[terminals, setTerminals]= useState(null);
+  const [parameters, setParameters] = useState(null);
+  const [terminals, setTerminals]= useState(null);
   const [currterminal, setCurrTerminal] = useState(null);
   const [currtid, setCurrTid] = useState("");
   const [currmid, setCurrMid] = useState("");
@@ -33,13 +33,8 @@ function AddTerminal() {
   const [curradd1, setCurrAdd1] = useState("");
   const [curradd2, setCurrAdd2] = useState("");
   const [currpostal, setCurrPostal] = useState("");
-  const [parameters, setParameters] = useState({
-    par_name: "",
-    variables: [],
-  });
+  const [tparameters, setTParameters] = useState(null);
 
-
-  
   //   popUp for adding Terminal
   const [basicModalTermi, setBasicModalTermi] = useState(false);
 
@@ -51,48 +46,24 @@ function AddTerminal() {
     getdetails(contextuser[0]?.BankName).then((data) => {
       setBankDetails(data?.details);
       setTerminals(data?.details.terminals);
+      setParameters(data?.details.parameters);
     });
   }, [contextuser]);
 
-//   //   Pushing varibale to the repective paramater
-//   const pushvarible = () => {
-//     let prev_variables = currterminal?.variables;
-//     // prev_variables?.push(variable);
-//     setCurrTerminal({ ...currterminal, variable: prev_variables });
-//     var temp_parameters = parameters;
-//     var index1;
-//     console.log("The prev Parameters are: ", temp_parameters);
-//     temp_parameters.map((temp_param, index) => {
-//       if (temp_param?.termi_name === currterminal?.termi_name) {
-//         index1 = index;
-//         return;
-//       }
-//     });
-//     temp_parameters[index1] = currterminal;
-//     setTerminals(temp_parameters);
-//     addtermi(contextuser[0]?.BankName, terminals).then((res) => {
-//       console.log("The response is: ", res);
-//       setBasicModalVariable(!basicModalVariable);
-//       setTerminal({
-//         tid: "",
-//         mid: "",
-//       });
-//     });
-//   };
-
-  //   Creating a New Terminal
+  //  Creating a New Terminal
   const AddCurrTerminal = () => {
+    console.log("the parameters:",parameters);
     var combined_curr_termi = {
-      // termi_name: currterminal_name,
       tid: currtid,
       mid: currmid,
       name: currname,
       add1:curradd1,
       add2:curradd2,
       postal:currpostal,
-      parameters: [],
+      tparameters: parameters,
     };
 
+    // Pushing new terminal
     setCurrTerminal(combined_curr_termi);
     console.log("The Curr termi name is : ", currtid);
     var prev_termis = terminals;
@@ -159,9 +130,7 @@ function AddTerminal() {
       ) : (
         <></>
       )}
-
-     {/* PopUp for Creating an Extra Variable- deleted*/}
-
+      
       {/* PopUp for Creating an Extra Terminal  */}
       <MDBModal
         show={basicModalTermi}

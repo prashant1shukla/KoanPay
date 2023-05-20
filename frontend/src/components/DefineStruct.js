@@ -55,7 +55,7 @@ function DefineStruct() {
     });
   }, [contextuser]);
 
-  //   Pushing varibale to the repective paramater
+  //Pushing varibale to the repective paramater
   const pushvarible = () => {
     let prev_variables = currparameter?.variables;
     prev_variables?.push(variable);
