@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getdetails } from "../api/getbankdetails";
 import { useContext } from "react";
 import { UserContext } from "../App";
+import axios from "../api/axios";
 import {
   MDBTable,
   MDBTableHead,
@@ -25,7 +26,7 @@ function AddTerminal() {
 
   const [bankDetails, setBankDetails] = useState(null);
   const [parameters, setParameters] = useState(null);
-  const [terminals, setTerminals]= useState(null);
+  const [terminals, setTerminals] = useState(null);
   const [currterminal, setCurrTerminal] = useState(null);
   const [currtid, setCurrTid] = useState("");
   const [currmid, setCurrMid] = useState("");
@@ -33,6 +34,7 @@ function AddTerminal() {
   const [curradd1, setCurrAdd1] = useState("");
   const [curradd2, setCurrAdd2] = useState("");
   const [currpostal, setCurrPostal] = useState("");
+  const [createdby, setCreatedBy] = useState("");
   const [tparameters, setTParameters] = useState(null);
 
   //   popUp for adding Terminal
@@ -48,18 +50,20 @@ function AddTerminal() {
       setTerminals(data?.details.terminals);
       setParameters(data?.details.parameters);
     });
+    setCreatedBy(contextuser[0]?.email)
   }, [contextuser]);
 
   //  Creating a New Terminal
   const AddCurrTerminal = () => {
-    console.log("the parameters:",parameters);
+    console.log("the parameters:", parameters);
     var combined_curr_termi = {
       tid: currtid,
       mid: currmid,
       name: currname,
-      add1:curradd1,
-      add2:curradd2,
-      postal:currpostal,
+      createdby: createdby,
+      add1: curradd1,
+      add2: curradd2,
+      postal: currpostal,
       tparameters: parameters,
     };
 
@@ -75,6 +79,14 @@ function AddTerminal() {
       setBasicModalTermi(!basicModalTermi);
       setCurrTerminal(null);
       setCurrTid("");
+      // axios.get('/tid-details', {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization:`{"bank":"${contextuser[0]?.BankName}", "tid":"${currtid}"}`,
+      //   }
+      // }).then((data) => {
+      //   console.log("the tid detail", data);
+      // })
     });
   };
 
@@ -83,7 +95,7 @@ function AddTerminal() {
       <h1>Create the Terminal of {contextuser[0]?.BankName}</h1>
       {terminals ? (
         <>
-        {/* dispaly termianls */}
+          {/* dispaly termianls */}
           {/* <MDBAccordion>
             {terminals.map((par, index) => {
               return (
@@ -153,7 +165,7 @@ function AddTerminal() {
                 id="TerminalId"
                 type="text"
                 value={currtid}
-                onChange={(e) => 
+                onChange={(e) =>
                   setCurrTid(e.target.value)
                 }
               />
@@ -163,51 +175,51 @@ function AddTerminal() {
                 id="MerchantId"
                 type="text"
                 value={currmid}
-                onChange={(e) => 
+                onChange={(e) =>
                   setCurrMid(e.target.value)
                 }
               />
-              <br/>
+              <br />
               <MDBInput
                 label="Merchant Name"
                 id="MerchantName"
                 type="text"
                 value={currname}
-                onChange={(e) => 
+                onChange={(e) =>
                   setCurrName(e.target.value)
                 }
               />
-              <br/>
+              <br />
               <MDBInput
                 label="Address Line 1"
                 id="AddressLine1"
                 type="text"
                 value={curradd1}
-                onChange={(e) => 
+                onChange={(e) =>
                   setCurrAdd1(e.target.value)
                 }
               />
-              <br/>
+              <br />
               <MDBInput
                 label="Address Line 2"
                 id="AddressLine2"
                 type="text"
                 value={curradd2}
-                onChange={(e) => 
+                onChange={(e) =>
                   setCurrAdd2(e.target.value)
                 }
               />
-              <br/>
+              <br />
               <MDBInput
                 label="Postal Code"
                 id="PostalCode"
                 type="text"
                 value={currpostal}
-                onChange={(e) => 
+                onChange={(e) =>
                   setCurrPostal(e.target.value)
                 }
               />
-              
+
             </MDBModalBody>
             <MDBModalFooter>
               <MDBBtn color="secondary" onClick={toggleShowPopupTermi}>
@@ -224,6 +236,7 @@ function AddTerminal() {
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
+
     </div>
   );
 }

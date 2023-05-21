@@ -190,7 +190,8 @@ app.post("/updateterminal", async (req, res) => {
     }
   );
   res.send({
-    status: "Updated"
+    status: "Updated",
+    terminaldetails: terminal,
   });
 });
 
@@ -279,6 +280,27 @@ app.post("/create-terminal", async (req, res) => {
     res.send({ status: "error" });
   }
 });
+
+
+// Getting terminal details
+app.get("/tid-details", async(req, res)=>{
+  // const{bank, tid}=req.headers.authorization;
+  var headers=req.headers.authorization;
+  headers=JSON.parse(headers);
+  
+  console.log("this is the terminal bank",headers.bank, headers.tid);
+  const bankindb= await Bank.findOne({ bank: headers.bank });
+  bankindb.terminals.map((terminal)=>{
+    if (terminal.tid===headers.tid){
+      res.send({status:"ok", data:terminal});
+    }
+  })
+  res.send({status:"error"});
+
+});
+
+
+
 
 // Adding User to Bank
 app.post("/adduser", async (req, res) => {

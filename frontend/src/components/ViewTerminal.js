@@ -21,11 +21,6 @@ function User() {
   const contextuser = useContext(UserContext);
   let navigate = useNavigate();
 
-  /*
-        user needed --> context API
-        bank needed --> context API
-        bank details needed --> getbankdetails.js file --> API call
-    */
   const [bankdetails, setbankdetails] = useState(null);
   const [variable, setvariable] = useState({
     var_name: "",
