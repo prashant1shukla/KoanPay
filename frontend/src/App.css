@@ -52,6 +52,7 @@
 /* CreateBank comp */
 .bank-signup {
   width: 60%;
+  padding-top: 2.2rem;
 }
 
 /* Admin comp */
@@ -73,11 +74,29 @@
 .row-width {
   max-width: 80%;
 }
-.struct_container{
+
+/* Define Struct */
+
+.define-struct-container {
+  background: #09c6f9;
+  padding-top: 3rem;
+  padding-bottom: 8rem;
+}
+
+.define-struct-subcontainer {
+  border-radius: 0.5rem;
+  background: #fff;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 3rem;
+}
+
+/* .struct_container{
   width: 80vw;
   margin: auto ;
   margin-top: 20px;
-}
+} */
 
 /* User */
 
@@ -117,4 +136,10 @@
 /* Footer */ 
 .bg-color {
   background: #2196F3;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  padding-left: 1.5rem;
+  padding-top: 1rem;
 }

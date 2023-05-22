@@ -15,7 +15,7 @@ import {
 }
 from 'mdb-react-ui-kit';
 
-export default function Header() {
+export default function Navbar() {
     const [showNavSecond, setShowNavSecond] = useState(false);
 
     return (

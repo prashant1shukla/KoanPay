@@ -12,7 +12,7 @@ import {
 }
 from 'mdb-react-ui-kit';
 
-export default function UserDetails() {
+export default function CreateBank() {
   let navigate = useNavigate();
   const [bank, setBank] = useState("");
   const [email, setEmail] = useState("");
@@ -46,7 +46,7 @@ export default function UserDetails() {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <MDBContainer className="bank-signup mx-auto pt-5 gradient-form">
+        <MDBContainer className="bank-signup mx-auto gradient-form">
 
         <MDBRow>
 

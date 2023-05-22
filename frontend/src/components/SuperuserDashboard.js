@@ -34,7 +34,7 @@ function Superuser() {
         <MDBBtn
           className="w-10 btn-util my-5"
           onClick={() => {
-            return navigate("/createbank");
+            return navigate("/create_bank");
           }}
         >
           Create New Bank

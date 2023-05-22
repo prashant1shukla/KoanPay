@@ -2,19 +2,20 @@ import React, { useState } from "react";
 //import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 //import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Header from "./components/Header";
+import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Login from "./components/LoginComponent";
-import BankName from "./components/CreateBank";
-import AddParameter from "./components/AddParameter";
-import Superuser from "./components/Superuser";
-import Admin from "./components/Admin";
+import Login from "./components/Login";
+import CreateBank from "./components/CreateBank";
+import SuperuserDashboard from "./components/SuperuserDashboard";
+import AdminDashboard from "./components/AdminDashboard";
 import ViewTerminal from "./components/ViewTerminal";
 
 // Creating a Context
 import { createContext } from "react";
 import DefineStruct from "./components/DefineStruct";
 import UserDashboard from "./components/UserDashboard";
+import BreadcrumbHome from "./components/BreadcrumbHome";
+import BreadcrumbView from "./components/BreadcrumbView";
 
 export const UserContext = createContext();
 
@@ -29,14 +30,12 @@ function App() {
             <div className="auth-inner">
               <Routes>
                 <Route exact path="/" element={<Login />} />
-                <Route path="/superuser" element={[<Header />, <Superuser />, <Footer />]} />
-                {/* <Route path="/user" element={[<Header />, <User />, <Footer />]} /> */}
-                <Route path="/user" element={[<Header />, <UserDashboard />, <Footer />]} />
-                <Route path="/admin" element={[<Header />, <Admin />, <Footer />]} />
-                <Route path="/define-struct" element={[<Header />, <DefineStruct />, <Footer />]} />
-                {/* <Route path="/view-terminal" element={[<Header />, <ViewTerminal/>, <Footer />]} /> */}
-                <Route path="/createbank" element={[<Header />, <BankName />, <Footer />]} />
-                <Route path="/:bank_name" element={[<Header />, <AddParameter />, <Footer />]} />
+                <Route path="/superuser" element={[<Navbar />, <SuperuserDashboard />, <Footer />]} />
+                <Route path="/user" element={[<Navbar />, <BreadcrumbHome />, <UserDashboard />, <Footer />]} />
+                <Route path="/admin" element={[<Navbar />, <AdminDashboard />, <Footer />]} />
+                <Route path="/define_struct" element={[<Navbar />, <DefineStruct />, <Footer />]} />
+                {/* <Route path="/view_terminal" element={[<Navbar />, <BreadcrumbView />, <ViewTerminal/>, <Footer />]} /> */}
+                <Route path="/create_bank" element={[<Navbar />, <CreateBank />, <Footer />]} />
               </Routes>
             </div>
           </div>
