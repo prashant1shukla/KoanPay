@@ -69,7 +69,6 @@ function User() {
     <div className="user-container">
       <div className="user-subcontainer">
         <h1 className="text-center title-padding">Hello user, you can now edit the variables of {contextuser[0]?.BankName}</h1>
-        <MDBBtn className="btn-util my-5 col" onClick={() => { return navigate('/create-terminal') }}>Create Terminal</MDBBtn>
         {bankdetails?.parameters.map((param) => {
           return (
             <>
