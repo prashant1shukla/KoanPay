@@ -17,8 +17,8 @@
 }
 @media (min-width: 769px) {
   .gradient-custom-2 {
-    border-top-right-radius: .3rem;
-    border-bottom-right-radius: .3rem;
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
   }
 }
 
@@ -129,17 +129,33 @@
 
 /* Navbar */
 .img-padding {
- padding-right: 1rem;
- padding-left: 1rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
 }
 
-/* Footer */ 
+/* Footer */
 .bg-color {
-  background: #2196F3;
+  background: #2196f3;
 }
 
 /* Breadcrumb */
 .breadcrumb {
   padding-left: 1.5rem;
   padding-top: 1rem;
+}
+
+.struct_container{
+  padding: 20px;
+}
+
+
+/* Terminal-Container */
+.terminals_container{
+  /* width: 80vw; */
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 70vh;
 }
