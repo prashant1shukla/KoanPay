@@ -24,7 +24,7 @@ export default function Footer() {
 
     return (
 
-      <MDBFooter bgColor='dark' className='text-white text-center text-lg-left'>
+      <MDBFooter bgColor='dark' className='text-white text-center text-lg-left footer_custom'>
         <MDBContainer className='p-4'>
           <MDBRow>
             <MDBCol lg='6' md='12' className='mb-4 mb-md-0'>

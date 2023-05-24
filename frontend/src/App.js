@@ -20,26 +20,44 @@ import BreadcrumbView from "./components/BreadcrumbView";
 export const UserContext = createContext();
 
 function App() {
-  const [user,setUser] = useState(null);
+  const [user, setUser] = useState(null);
   return (
     <Router>
-      <UserContext.Provider value={[user,setUser]}>
+      <UserContext.Provider value={[user, setUser]}>
         <div className="App">
-
           <div className="auth-wrapper">
             <div className="auth-inner">
               <Routes>
                 <Route exact path="/" element={<Login />} />
-                <Route path="/superuser" element={[<Navbar />, <SuperuserDashboard />, <Footer />]} />
-                <Route path="/user" element={[<Navbar />, <BreadcrumbHome />, <UserDashboard />, <Footer />]} />
-                <Route path="/admin" element={[<Navbar />, <AdminDashboard />, <Footer />]} />
-                <Route path="/define_struct" element={[<Navbar />, <DefineStruct />, <Footer />]} />
+                <Route
+                  path="/superuser"
+                  element={[<Navbar />, <SuperuserDashboard />, <Footer />]}
+                />
+                <Route
+                  path="/user"
+                  element={[
+                    <Navbar />,
+                    <BreadcrumbHome />,
+                    <UserDashboard />,
+                    <Footer />,
+                  ]}
+                />
+                <Route
+                  path="/admin"
+                  element={[<Navbar />, <AdminDashboard />, <Footer />]}
+                />
+                <Route
+                  path="/define_struct"
+                  element={[<Navbar />, <DefineStruct />, <Footer />]}
+                />
                 {/* <Route path="/view_terminal" element={[<Navbar />, <BreadcrumbView />, <ViewTerminal/>, <Footer />]} /> */}
-                <Route path="/create_bank" element={[<Navbar />, <CreateBank />, <Footer />]} />
+                <Route
+                  path="/create_bank"
+                  element={[<Navbar />, <CreateBank />, <Footer />]}
+                />
               </Routes>
             </div>
           </div>
-        
         </div>
       </UserContext.Provider>
     </Router>
