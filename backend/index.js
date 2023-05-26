@@ -296,7 +296,6 @@ app.get("/tid-details", async(req, res)=>{
     }
   })
   res.send({status:"error"});
-
 });
 
 
@@ -347,7 +346,52 @@ app.get("/getBankdetails", async (req, res) => {
 });
 
 
-
+// Adding an Entity
+app.post("/add-entry",async (req,res)=>{
+  const {bank,tid,parameter,variable} = req.body;
+  var bankindb = await Bank.findOne({bank:bank});
+  var tid_index,param_index,var_index,entity;
+  bankindb?.terminals.map((terminal,index_of_terminal)=>{
+    if(terminal.tid === tid){
+      tid_index = index_of_terminal;
+      terminal.tparameters.map((param,index_of_param)=>{
+        if(param.par_name === parameter){
+          param_index = index_of_param;
+          param.variables.map((vari,index_of_var)=>{
+            if(vari.var_name == variable){
+              var_index = index_of_var;
+              entity = {
+                var_name:vari.var_name,
+                max_size:vari.max_size,
+                min_size : vari.min_size,
+                value:vari.value
+              }
+              return;
+            }
+            return;
+          })
+          return;
+        }
+      })
+    }
+  })
+  var terminals = bankindb.terminals;
+  var prev_entries = terminals[tid_index].tparameters[param_index].variables[var_index].entries;
+  prev_entries.push(entity);
+  var len = prev_entries.length;
+  prev_entries[len-1]["id"] = len;
+  terminals[tid_index].tparameters[param_index].variables[var_index].entries = prev_entries;
+  await Bank.updateOne({
+    bank:bank
+  },{
+    $set:{
+      terminals:terminals
+    }
+  })
+  res.send({
+    status:"OK"
+  })
+})
 
 app.listen(5000, () => {
   console.log("Server started!");
