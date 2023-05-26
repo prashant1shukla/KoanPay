@@ -32,6 +32,7 @@ function DefineStruct() {
     max_size: "",
     min_size: "",
     value: "",
+    entries:[]
   });
 
   // popUp for adding Variable
@@ -79,6 +80,7 @@ function DefineStruct() {
         max_size: "",
         min_size: "",
         value: "",
+        entries:[]
       });
     });
   };
