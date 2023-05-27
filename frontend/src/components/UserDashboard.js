@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getdetails } from "../api/getbankdetails";
 import { useContext } from "react";
 import { UserContext } from "../App";
+import { TerminalContext } from "../App";
 import {
   MDBBtn,
   MDBModal,
@@ -18,8 +19,12 @@ import ReactPaginate from "react-paginate";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
 import { Link } from "react-router-dom";
 
+
+
 function AddTerminal() {
+  
   const contextuser = useContext(UserContext);
+  const contextterminal = useContext(TerminalContext);
 
   const [bankDetails, setBankDetails] = useState(null);
   const [parameters, setParameters] = useState(null);
@@ -86,17 +91,15 @@ function AddTerminal() {
   };
 
   return (
-    <div className="struct_container">
-      <h1>Create the Terminal of {contextuser[0]?.BankName}</h1>
-      <br />
-      <MDBBtn
+    <div className="struct_container text-center">
+      <MDBBtn className="my-3"
         onClick={() => {
           toggleShowPopupTermi();
         }}
-      >
-        Add Terminal
+        >
+        Create Terminal
       </MDBBtn>
-      <br />
+      <h1 className="py-4">Search Bar</h1>
       <div className="terminals_container">
         {terminals ? (
           <>
@@ -105,13 +108,16 @@ function AddTerminal() {
             <MDBTable>
               <MDBTableHead>
                 <tr>
-                  <th scope="col">Tid</th>
-                  <th scope="col">Mid</th>
+                  <th scope="col">TID</th>
+                  <th scope="col">MID</th>
                   <th scope="col">Name</th>
-                  <th scope="col">CreatedBy</th>
-                  <th scope="col">Add1</th>
-                  <th scope="col">Add2</th>
-                  <th scope="col">Postal</th>
+                  <th scope="col">add1</th>
+                  <th scope="col">add2</th>
+                  <th scope="col">postal</th>
+                  <th scope="col">created by</th>
+                  <th scope="col">updated by</th>
+                  <th scope="col">creation date</th>
+                  <th scope="col">updation date</th>
                 </tr>
               </MDBTableHead>
               <MDBTableBody>
@@ -120,13 +126,22 @@ function AddTerminal() {
                     <>
                       {index >= (page - 1) * 5 && index <= page * 5 - 1 ? (
                         <tr>
-                          <th scope="row"><Link to={`/${terminal.tid}`}>{terminal.tid}</Link></th>
+                          {/* <th scope="row"><Link to={`/${terminal.tid}`}>{terminal.tid}</Link></th> */}
+                          <th scope="row"><Link to={`view_terminal`} 
+                            onClick={() => {
+                              contextterminal[1](terminal);
+                              console.log("the terminal is:", contextterminal[0]);
+                          }}
+                          >{terminal.tid}</Link></th>
                           <td>{terminal.mid}</td>
                           <td>{terminal.name}</td>
-                          <td>{terminal.createdby}</td>
                           <td>{terminal.add1}</td>
                           <td>{terminal.add2}</td>
                           <td>{terminal.postal}</td>
+                          <td>{terminal.createdby}</td>
+                          <td>{terminal.updatedby}</td>
+                          <td>{terminal.creationdate}</td>
+                          <td>{terminal.updationdate}</td>
                         </tr>
                       ) : (
                         <></>
@@ -137,6 +152,7 @@ function AddTerminal() {
               </MDBTableBody>
             </MDBTable>
             <br />
+
             <ReactPaginate
               nextLabel="next >"
               onPageChange={(e) => {
@@ -161,7 +177,7 @@ function AddTerminal() {
             />
           </>
         ) : (
-          <h3>No termianls</h3>
+          <h3>No terminals</h3>
         )}
       </div>
 

@@ -8,7 +8,7 @@ import Login from "./components/Login";
 import CreateBank from "./components/CreateBank";
 import SuperuserDashboard from "./components/SuperuserDashboard";
 import AdminDashboard from "./components/AdminDashboard";
-import ViewTerminal from "./components/ViewTerminal";
+import ViewAndUpdateTerminal from "./components/ViewAndUpdateTerminal";
 
 // Creating a Context
 import { createContext } from "react";
@@ -18,47 +18,51 @@ import BreadcrumbHome from "./components/BreadcrumbHome";
 import BreadcrumbView from "./components/BreadcrumbView";
 
 export const UserContext = createContext();
+export const TerminalContext = createContext();
 
 function App() {
   const [user, setUser] = useState(null);
+  const [terminal, setTerminal] = useState(null);
   return (
     <Router>
       <UserContext.Provider value={[user, setUser]}>
-        <div className="App">
-          <div className="auth-wrapper">
-            <div className="auth-inner">
-              <Routes>
-                <Route exact path="/" element={<Login />} />
-                <Route
-                  path="/superuser"
-                  element={[<Navbar />, <SuperuserDashboard />, <Footer />]}
-                />
-                <Route
-                  path="/user"
-                  element={[
-                    <Navbar />,
-                    <BreadcrumbHome />,
-                    <UserDashboard />,
-                    <Footer />,
-                  ]}
-                />
-                <Route
-                  path="/admin"
-                  element={[<Navbar />, <AdminDashboard />, <Footer />]}
-                />
-                <Route
-                  path="/define_struct"
-                  element={[<Navbar />, <DefineStruct />, <Footer />]}
-                />
-                {/* <Route path="/view_terminal" element={[<Navbar />, <BreadcrumbView />, <ViewTerminal/>, <Footer />]} /> */}
-                <Route
-                  path="/create_bank"
-                  element={[<Navbar />, <CreateBank />, <Footer />]}
-                />
-              </Routes>
+        <TerminalContext.Provider value={[terminal, setTerminal]}>
+          <div className="App">
+            <div className="auth-wrapper">
+              <div className="auth-inner">
+                <Routes>
+                  <Route exact path="/" element={<Login />} />
+                  <Route
+                    path="/superuser"
+                    element={[<Navbar />, <SuperuserDashboard />, <Footer />]}
+                  />
+                  <Route
+                    path="/user"
+                    element={[
+                      <Navbar />,
+                      <BreadcrumbHome />,
+                      <UserDashboard />,
+                      <Footer />,
+                    ]}
+                  />
+                  <Route
+                    path="/admin"
+                    element={[<Navbar />, <AdminDashboard />, <Footer />]}
+                  />
+                  <Route
+                    path="/define_struct"
+                    element={[<Navbar />, <DefineStruct />, <Footer />]}
+                  />
+                  <Route path="/user/view_terminal" element={[<Navbar />, <BreadcrumbView />, <ViewAndUpdateTerminal/>, <Footer />]} />
+                  <Route
+                    path="/create_bank"
+                    element={[<Navbar />, <CreateBank />, <Footer />]}
+                  />
+                </Routes>
+              </div>
             </div>
           </div>
-        </div>
+        </TerminalContext.Provider>
       </UserContext.Provider>
     </Router>
   );
