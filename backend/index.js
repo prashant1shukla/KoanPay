@@ -222,7 +222,6 @@ app.post("/updateVariable", async (req, res) => {
       });
     }
   });
-
   //   Updating the logs
   var newlog = {
     user: user,
@@ -361,10 +360,10 @@ app.post("/add-entry",async (req,res)=>{
             if(vari.var_name == variable){
               var_index = index_of_var;
               entity = {
-                var_name:vari.var_name,
-                max_size:vari.max_size,
+                var_name: vari.var_name,
+                max_size: vari.max_size,
                 min_size : vari.min_size,
-                value:vari.value
+                value: vari.value,
               }
               return;
             }
@@ -381,6 +380,49 @@ app.post("/add-entry",async (req,res)=>{
   var len = prev_entries.length;
   prev_entries[len-1]["id"] = len;
   terminals[tid_index].tparameters[param_index].variables[var_index].entries = prev_entries;
+  await Bank.updateOne({
+    bank:bank
+  },{
+    $set:{
+      terminals:terminals
+    }
+  })
+  res.send({
+    status:"OK"
+  })
+})
+
+//Updating Entry
+app.post("/update-entry",async (req,res)=>{
+  const {bank,tid,parameter,variable, id} = req.body;
+  var bankindb = await Bank.findOne({bank:bank});
+  var tid_index,param_index,var_index,entity_index;
+  bankindb?.terminals.map((terminal,index_of_terminal)=>{
+    if(terminal.tid === tid){
+      tid_index = index_of_terminal;
+      terminal.tparameters.map((param,index_of_param)=>{
+        if(param.par_name === parameter){
+          param_index = index_of_param;
+          param.variables.map((vari, index_of_var)=>{
+            if(vari.var_name == variable.var_name){
+              var_index = index_of_var;
+              vari.entries.map((entry, index_of_entry)=>{
+                if(entry.id===id){
+                  entity_index=index_of_entry;
+                  return;
+                }
+              })
+              return;
+            }
+            return;
+          })
+          return;
+        }
+      })
+    }
+  })
+  var terminals = bankindb.terminals;
+  terminals[tid_index].tparameters[param_index].variables[var_index].entries[entity_index]=variable;
   await Bank.updateOne({
     bank:bank
   },{
