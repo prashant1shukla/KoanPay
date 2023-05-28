@@ -21,9 +21,11 @@ import {
   MDBTabsItem,
   MDBTabsLink,
   MDBTabsContent,
-  MDBTabsPane
+  MDBTabsPane,
+  MDBTableBody
 } from "mdb-react-ui-kit";
 import { updatevariable } from "../api/updateVariables";
+import ReactPaginate from "react-paginate";
 
 function ViewAndUpdateTerminal() {
   const contextterminal = useContext(TerminalContext);
@@ -41,6 +43,7 @@ function ViewAndUpdateTerminal() {
 
   const [parameter, setParameter] = useState("");
   const [parameters, setParameters] = useState(null);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     getdetails(contextuser[0]?.BankName).then((data) => {
@@ -92,6 +95,11 @@ function ViewAndUpdateTerminal() {
     setParameter(param);
     setvariable(vari);
   };
+
+  const NextPage = (e) => {
+    setPage(e.selected + 1);
+  };
+
   return (
     <div className="view-terminal-container">
 
@@ -146,17 +154,58 @@ function ViewAndUpdateTerminal() {
                 <>
                   <MDBTabsContent>
                     <MDBTabsPane show={basicActive === `${tparam.par_name}`}>
-                      <MDBTable>
-                        <MDBTableHead>
-                          <tr className="text-center">
                             {tparam.variables?.map((vari) => {
                               return (
-                                  <th scope="col">{vari.var_name}</th>
+                                <>
+                                  <h5>{vari.var_name}</h5>
+                                  <MDBTable className="var-table">
+                                    <MDBTableHead>
+                                      <tr className="text-center">
+                                        <th scope="col">Variable</th>
+                                        <th scope="col">Minimum Size</th>
+                                        <th scope="col">Maximum Size</th>
+                                        <th scope="col">Value</th>
+                                      </tr>
+                                    </MDBTableHead>
+                                    <MDBTableBody>
+                                      {vari.entries?.map((entry) => {
+                                        return (
+                                          <tr className="text-center">
+                                            <td>{vari.var_name}</td>
+                                            <td>{vari.min_size}</td>
+                                            <td>{vari.max_size}</td>
+                                            <td>{entry.value}</td>
+                                          </tr>
+                                        );
+                                      })}
+                                    </MDBTableBody>
+                                  </MDBTable>
+
+                                  <ReactPaginate className="pagination"
+                                    nextLabel="next >"
+                                    onPageChange={(e) => {
+                                      NextPage(e);
+                                    }}
+                                    pageRangeDisplayed={5}
+                                    marginPagesDisplayed={2}
+                                    pageCount={Math.ceil(vari.entries.length / 5)}
+                                    previousLabel="< previous"
+                                    pageClassName="page-item"
+                                    pageLinkClassName="page-link"
+                                    previousClassName="page-item"
+                                    previousLinkClassName="page-link"
+                                    nextClassName="page-item"
+                                    nextLinkClassName="page-link"
+                                    breakLabel="..."
+                                    breakClassName="page-item"
+                                    breakLinkClassName="page-link"
+                                    containerClassName="pagination"
+                                    activeClassName="active"
+                                    renderOnZeroPageCount={null}
+                                  />
+                                </>
                               );
                             })}
-                          </tr>
-                        </MDBTableHead>
-                      </MDBTable>
                     </MDBTabsPane>
                   </MDBTabsContent>
                 </>
