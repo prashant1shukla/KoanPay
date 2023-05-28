@@ -177,3 +177,13 @@
   justify-content: center;
 }
 
+.var-table {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pagination {
+  justify-content: center;
+}
+
