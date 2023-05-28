@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../App";
+import { TerminalContext } from "../App";
 import { useNavigate } from "react-router-dom";
 import { getdetails } from "../api/getbankdetails";
 import {
@@ -14,10 +15,19 @@ import {
   MDBModalFooter,
   MDBAccordion, 
   MDBAccordionItem,
+  MDBTable,
+  MDBTableHead,
+  MDBTabs,
+  MDBTabsItem,
+  MDBTabsLink,
+  MDBTabsContent,
+  MDBTabsPane
 } from "mdb-react-ui-kit";
 import { updatevariable } from "../api/updateVariables";
 
-function User() {
+function ViewAndUpdateTerminal() {
+  const contextterminal = useContext(TerminalContext);
+  //console.log("the context is: ", contextterminal[0]);
   const contextuser = useContext(UserContext);
   let navigate = useNavigate();
 
@@ -28,10 +38,14 @@ function User() {
     min_size: "",
     value: "",
   });
+
   const [parameter, setParameter] = useState("");
+  const [parameters, setParameters] = useState(null);
+
   useEffect(() => {
     getdetails(contextuser[0]?.BankName).then((data) => {
       setbankdetails(data.details);
+      setParameters(data.details.parameters);
       console.log(data);
     });
   }, [contextuser]);
@@ -57,6 +71,19 @@ function User() {
     });
   };
 
+  //Parameters tab
+
+  const [basicActive, setBasicActive] = useState(`${contextterminal[0]?.tparameters[0]?.par_name}`);
+
+  const handleBasicClick = (value) => {
+    if (value === basicActive) {
+      return;
+    }
+
+    setBasicActive(value);
+  };
+
+
   // POpUp variables
   const [basicModal, setBasicModal] = useState(false);
 
@@ -66,9 +93,9 @@ function User() {
     setvariable(vari);
   };
   return (
-    <div className="user-container">
-      <div className="user-subcontainer">
-        <h1 className="text-center title-padding">Hello user, you can now edit the variables of {contextuser[0]?.BankName}</h1>
+    <div className="view-terminal-container">
+
+        {/* <h1 className="text-center title-padding">Hello user, you can now edit the variables of {contextuser[0]?.BankName}</h1>
         {bankdetails?.parameters.map((param) => {
           return (
             <>
@@ -98,7 +125,47 @@ function User() {
             </MDBAccordion>
             </>
           );
-        })}
+        })} */}
+
+        <>
+          <MDBTabs className='mb-3 param-tabs'>
+            {contextterminal[0]?.tparameters.map((tparam) => {
+              return (
+                <>
+                  <MDBTabsItem>
+                    <MDBTabsLink onClick={() => handleBasicClick(`${tparam.par_name}`)} active={basicActive === `${tparam.par_name}`}>
+                      {tparam.par_name}
+                    </MDBTabsLink>
+                  </MDBTabsItem>
+                </>
+              );
+            })}
+          </MDBTabs>
+          {contextterminal[0]?.tparameters.map((tparam) => {
+              return (
+                <>
+                  <MDBTabsContent>
+                    <MDBTabsPane show={basicActive === `${tparam.par_name}`}>
+                      <MDBTable>
+                        <MDBTableHead>
+                          <tr className="text-center">
+                            {tparam.variables?.map((vari) => {
+                              return (
+                                  <th scope="col">{vari.var_name}</th>
+                              );
+                            })}
+                          </tr>
+                        </MDBTableHead>
+                      </MDBTable>
+                    </MDBTabsPane>
+                  </MDBTabsContent>
+                </>
+              );
+            })}
+        </>
+
+        
+
         {/* PopUp for editing */}
         <MDBModal show={basicModal} setShow={setBasicModal} tabIndex="-1">
           <MDBModalDialog>
@@ -136,9 +203,8 @@ function User() {
             </MDBModalContent>
           </MDBModalDialog>
         </MDBModal>
-      </div>
     </div>
   );
 }
 
-export default User;
+export default ViewAndUpdateTerminal;

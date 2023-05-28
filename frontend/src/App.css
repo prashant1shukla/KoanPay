@@ -92,6 +92,10 @@
   padding: 3rem;
 }
 
+.accordion-gap {
+  margin-bottom: 2rem;
+}
+
 /* .struct_container{
   width: 80vw;
   margin: auto ;
@@ -140,8 +144,8 @@
 
 /* Breadcrumb */
 .breadcrumb {
-  padding-left: 1.5rem;
-  padding-top: 1rem;
+  padding-left: 2rem;
+  padding-top: 1.2rem;
 }
 
 .struct_container{
@@ -151,11 +155,25 @@
 
 /* Terminal-Container */
 .terminals_container{
-  /* width: 80vw; */
-  margin: auto;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  height: 70vh;
+  /* height: 50vh; */
 }
+
+/* View and Update Terminal */ 
+.view-terminal-container {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.param-tabs {
+  /* width: 40%; */
+  justify-content: center;
+}
+

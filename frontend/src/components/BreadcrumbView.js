@@ -6,7 +6,7 @@ export default function BreadcrumbView() {
     <>
       <MDBBreadcrumb>
         <MDBBreadcrumbItem>
-          <a href='#'>Home</a>
+          <a href='javascript:history.back()'>Home</a>
         </MDBBreadcrumbItem>
         <MDBBreadcrumbItem active>View</MDBBreadcrumbItem>
       </MDBBreadcrumb>
