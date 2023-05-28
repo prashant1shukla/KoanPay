@@ -22,10 +22,10 @@ export default function Navbar() {
 
       <MDBNavbar expand='lg' light bgColor='light'>
         <MDBContainer fluid>
-          <a href="">
+          {/* <a href=""> */}
             <img src="https://koanpay.com/assets/images/konpay-removebg-preview.png"
               style={{width: '185px'}} alt="logo" className="img-padding"/>
-          </a>
+          {/* </a> */}
           <MDBNavbarToggler
             aria-expanded='false'
             aria-label='Toggle navigation'

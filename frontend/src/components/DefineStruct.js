@@ -111,7 +111,7 @@ function DefineStruct() {
         <h1 className="text-center title-padding">Create the structure of {contextuser[0]?.BankName}</h1>
         {parameters ? (
           <>
-            <MDBAccordion>
+            <MDBAccordion className="accordion-gap">
               {parameters.map((par, index) => {
                 return (
                   <MDBAccordionItem
@@ -147,14 +147,15 @@ function DefineStruct() {
                 );
               })}
             </MDBAccordion>
-            <br />
-            <MDBBtn
-              onClick={() => {
-                toggleShowPopupParam();
-              }}
-            >
-              Add Paramater
-            </MDBBtn>
+            <div className="text-center">
+              <MDBBtn
+                onClick={() => {
+                  toggleShowPopupParam();
+                }}
+              >
+                Add Paramater
+              </MDBBtn>
+            </div>
           </>
         ) : (
           <></>
