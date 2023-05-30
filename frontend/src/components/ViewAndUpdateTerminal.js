@@ -5,6 +5,7 @@ import { TerminalContext } from "../App";
 import { useNavigate } from "react-router-dom";
 import { getdetails } from "../api/getbankdetails";
 import { addentry } from "../api/addentries";
+import { updateentry } from "../api/updateentries";
 
 import {
   MDBBtn,
@@ -47,6 +48,7 @@ function ViewAndUpdateTerminal() {
   const [parameter, setParameter] = useState("");
   const [parameters, setParameters] = useState(null);
   const [currvariable, setCurrVariable] = useState(null);
+  const [currvariable_value, setCurrVariable_value] = useState("");
 
   const [page, setPage] = useState(1);
 
@@ -101,6 +103,20 @@ function ViewAndUpdateTerminal() {
     }
     addentry(contextuser[0]?.BankName, contextterminal[0]?.tid, parameter.par_name, combinedvariable.var_name).then((data) => {
       console.log("The status is, ", data);
+    })
+  }
+
+  const UpdateEntry = (parameter) => {
+    console.log("this is parameter", parameter);
+    // setCurrVariable({...currvariable, value: currvariable_value });    
+    var tempVar= currvariable;
+    tempVar["value"]=currvariable_value;
+    console.log("the variable is", tempVar);
+    updateentry(contextuser[0]?.BankName, contextterminal[0]?.tid, parameter.par_name, tempVar, tempVar.id).then((data) => {
+      console.log("The status is, ", data);
+      setCurrVariable(null);
+      setCurrVariable_value("");
+      setBasicModalEntry(!basicModalEntry);
     })
   }
 
@@ -185,9 +201,6 @@ function ViewAndUpdateTerminal() {
               <MDBTabsContent>
                 <MDBTabsPane show={basicActive === `${tparam.par_name}`}>
                   {tparam.variables?.map((vari) => {
-                    // setVar_name(vari.var_name);
-                    // setMax_size(vari.max_size);
-                    // setMin_size(vari.min_size);
                     return (
                       <>
                         <h5>{vari.var_name}</h5>
@@ -210,6 +223,9 @@ function ViewAndUpdateTerminal() {
                                       <td>{vari.min_size}</td>
                                       <td>{vari.max_size}</td>
                                       <td>{entry.value}</td>
+                                      <td><MDBBtn onClick={()=>{
+                                        toggleShowPopupEntry(entry)
+                                    }}>EDIT</MDBBtn></td>
                                     </tr>) : (
                                     <></>
                                   )}
@@ -222,7 +238,7 @@ function ViewAndUpdateTerminal() {
                           Add Entry
                         </MDBBtn>
 
-                        {/* PopUp for Creating an Extra Entry
+                        {/* PopUp for Creating an Updating Entry */}
                         <MDBModal
                           show={basicModalEntry}
                           setShow={setBasicModalEntry}
@@ -231,7 +247,7 @@ function ViewAndUpdateTerminal() {
                           <MDBModalDialog>
                             <MDBModalContent>
                               <MDBModalHeader>
-                                <MDBModalTitle>Add Entry</MDBModalTitle>
+                                <MDBModalTitle>Update Entry</MDBModalTitle>
                                 <MDBBtn
                                   className="btn-close"
                                   color="none"
@@ -243,26 +259,24 @@ function ViewAndUpdateTerminal() {
                                   label="Enter Value"
                                   id="Value"
                                   type="text"
-                                  value={value}
+                                  value={currvariable_value}
                                   onChange={(e) =>
                                     {
-                                    setVar_name(vari.var_name);
-                                    setMax_size(vari.max_size);
-                                    setMin_size(vari.min_size);
-                                    setValue(e.target.value);
+                                      setCurrVariable_value(e.target.value);
                                     }
                                   }
                                 />
                                 <br />
                               </MDBModalBody>
                               <MDBModalFooter>
-                                <MDBBtn color="secondary" onClick={toggleShowPopupEntry}>
+                                <MDBBtn color="secondary" onClick={()=>{
+                                  setBasicModalEntry(!basicModalEntry);
+                                }}>
                                   Close
                                 </MDBBtn>
                                 <MDBBtn
                                   onClick={() => {
-                                    AddEntry(tparam);
-
+                                    UpdateEntry(tparam);
                                   }}
                                 >
                                   Save changes
@@ -270,7 +284,7 @@ function ViewAndUpdateTerminal() {
                               </MDBModalFooter>
                             </MDBModalContent>
                           </MDBModalDialog>
-                        </MDBModal> */}
+                        </MDBModal> 
 
 
                         <ReactPaginate className="pagination"
