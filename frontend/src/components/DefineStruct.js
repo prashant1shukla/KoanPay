@@ -85,7 +85,7 @@ function DefineStruct() {
     });
   };
 
-  //   Creating a New Parameter
+  // Creating a New Parameter
   const AddCurrParameter = () => {
     var combined_curr_param = {
       par_name: currparameter_name,
@@ -186,7 +186,7 @@ function DefineStruct() {
                   onChange={(e) =>
                     setVariable({ ...variable, var_name: e.target.value })
                   }
-                  />
+                />
                 <br />
                 <MDBInput
                   label="Minimum Size"

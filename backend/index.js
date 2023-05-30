@@ -394,7 +394,7 @@ app.post("/add-entry",async (req,res)=>{
 
 //Updating Entry
 app.post("/update-entry",async (req,res)=>{
-  const {bank,tid,parameter,variable, id} = req.body;
+  const {bank,tid,parameter,variable,id} = req.body;
   var bankindb = await Bank.findOne({bank:bank});
   var tid_index,param_index,var_index,entity_index;
   bankindb?.terminals.map((terminal,index_of_terminal)=>{

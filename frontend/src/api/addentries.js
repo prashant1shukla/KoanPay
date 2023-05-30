@@ -1,9 +1,11 @@
 import axios from "./axios";
 
-export const addentry= async(bank, entry)=>{
+export const addentry= async(bank,tid,parameter,variable)=>{
     const res = await axios.post("/add-entry",{
         bank: bank,
-        entry: entry,
+        tid:tid,
+        parameter:parameter,
+        variable:variable,
     })
     return res.data;
 }
