@@ -1,14 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../App";
-import { TerminalContext } from "../App";
-import { useNavigate } from "react-router-dom";
-import { getdetails } from "../api/getbankdetails";
+import { getTerminalDetails } from "../api/getTerminalDetails";
+import { useParams } from "react-router-dom";
 import { addentry } from "../api/addentries";
 import { updateentry } from "../api/updateentries";
 
+// For Tabs
 import {
+  MDBTabs,
+  MDBTabsItem,
+  MDBTabsLink,
+  MDBTabsContent,
+  MDBTabsPane,
   MDBBtn,
+  MDBInput,
+} from "mdb-react-ui-kit";
+
+// For accordians
+import { MDBAccordion, MDBAccordionItem } from "mdb-react-ui-kit";
+
+// Tabulate Formation
+import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
+
+// Edit Icon
+import { MDBIcon } from "mdb-react-ui-kit";
+
+// For Paginaiton
+import ReactPaginate from "react-paginate";
+
+// For popup
+import {
   MDBModal,
   MDBModalDialog,
   MDBModalContent,
@@ -16,344 +37,227 @@ import {
   MDBModalTitle,
   MDBModalBody,
   MDBModalFooter,
-  MDBInput,
-  MDBAccordion,
-  MDBAccordionItem,
-  MDBTable,
-  MDBTableHead,
-  MDBTabs,
-  MDBTabsItem,
-  MDBTabsLink,
-  MDBTabsContent,
-  MDBTabsPane,
-  MDBTableBody
 } from "mdb-react-ui-kit";
-import { updatevariable } from "../api/updateVariables";
-import ReactPaginate from "react-paginate";
 
 function ViewAndUpdateTerminal() {
-  const contextterminal = useContext(TerminalContext);
-  //console.log("the context is: ", contextterminal[0]);
   const contextuser = useContext(UserContext);
-  let navigate = useNavigate();
+  const { tid } = useParams();
+  const [terminaldetails, setterminaldetails] = useState(null);
+  const [currparameter, setCurrentparameter] = useState(null);
+  const [currentry, setcurrententry] = useState(null);
 
-  const [bankdetails, setbankdetails] = useState(null);
-  const [variable, setvariable] = useState({
-    var_name: "",
-    max_size: "",
-    min_size: "",
-    value: "",
-  });
+  // Tabs StateVariables
+  const [basicActive, setBasicActive] = useState(null);
 
-  const [parameter, setParameter] = useState("");
-  const [parameters, setParameters] = useState(null);
-  const [currvariable, setCurrVariable] = useState(null);
-  const [currvariable_value, setCurrVariable_value] = useState("");
-
-  const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    getdetails(contextuser[0]?.BankName).then((data) => {
-      setbankdetails(data.details);
-      setParameters(data.details.parameters);
-      console.log(data);
-    });
-  }, [contextuser]);
-  // Submit the updated variable
-  const updatethevariable = () => {
-    console.log("The param is : ", parameter);
-    console.log("The vari is : ", variable);
-    updatevariable(
-      contextuser[0].BankName,
-      parameter.par_name,
-      variable,
-      contextuser[0].email
-    ).then((data) => {
-      setbankdetails(data.details);
-      setBasicModal(false);
-      setParameter(null);
-      setvariable({
-        var_name: "",
-        max_size: "",
-        min_size: "",
-        value: "",
-      });
-    });
-  };
-
-
-  // popUp for adding Entry
-  const [basicModalEntry, setBasicModalEntry] = useState(false);
-
-  const toggleShowPopupEntry = (curr_var) => {
-    setCurrVariable(curr_var);
-    setBasicModalEntry(!basicModalEntry);
-  };
-
-  const [var_name, setVar_name] = useState("");
-  const [max_size, setMax_size] = useState("");
-  const [min_size, setMin_size] = useState("");
-  const [value, setValue] = useState("");
-  const AddEntry = (parameter) => {
-    let combinedvariable = {
-      var_name: var_name,
-      max_size: max_size,
-      min_size: min_size,
-      value: value,
-    }
-    addentry(contextuser[0]?.BankName, contextterminal[0]?.tid, parameter.par_name, combinedvariable.var_name).then((data) => {
-      console.log("The status is, ", data);
-    })
-  }
-
-  const UpdateEntry = (parameter) => {
-    console.log("this is parameter", parameter);
-    // setCurrVariable({...currvariable, value: currvariable_value });    
-    var tempVar= currvariable;
-    tempVar["value"]=currvariable_value;
-    console.log("the variable is", tempVar);
-    updateentry(contextuser[0]?.BankName, contextterminal[0]?.tid, parameter.par_name, tempVar, tempVar.id).then((data) => {
-      console.log("The status is, ", data);
-      setCurrVariable(null);
-      setCurrVariable_value("");
-      setBasicModalEntry(!basicModalEntry);
-    })
-  }
-
-
-  //Parameters tab
-  const [basicActive, setBasicActive] = useState(`${contextterminal[0]?.tparameters[0]?.par_name}`);
-
-  const handleBasicClick = (value) => {
-    if (value === basicActive) {
+  const handleBasicClick = (param) => {
+    if (param.par_name === basicActive) {
       return;
     }
-
-    setBasicActive(value);
+    setCurrentparameter(param);
+    setBasicActive(param.par_name);
   };
+  // ----------------End of Tabs----------
 
-
-  // POpUp variables
-  const [basicModal, setBasicModal] = useState(false);
-
-  const toggleShow = (param, vari) => {
-    setBasicModal(!basicModal);
-    setParameter(param);
-    setvariable(vari);
-  };
-
+  // Pages
+  const [page, setPage] = useState(1);
+  // For next page
   const NextPage = (e) => {
     setPage(e.selected + 1);
   };
 
+  // PopUp
+  const [basicModal, setBasicModal] = useState(false);
+
+  const toggleShow = (entry) => {
+    setcurrententry(entry);
+    setBasicModal(!basicModal);
+  };
+
+  // UseEffect
+  useEffect(() => {
+    console.log("The terminal id is: ", tid);
+    getTerminalDetails(tid, contextuser[0]?.BankName).then((data) => {
+      setterminaldetails(data);
+      setCurrentparameter(data.tparameters[0]);
+      setBasicActive(data.tparameters[0].par_name);
+    });
+  }, []);
+
+  // Adding an Entry
+  const AddTheEntry = (vari) => {
+    addentry(
+      contextuser[0].BankName,
+      tid,
+      currparameter.par_name,
+      vari.var_name
+    ).then((data) => {
+      setterminaldetails(data.updatedterminal);
+      var entrieslength = vari.entries.length + 1;
+      setPage(Math.ceil(entrieslength / 3));
+    });
+  };
+  // Editing an Entry
+  const editEntry = () => {
+    console.log(currentry);
+    updateentry(
+      contextuser[0].BankName,
+      tid,
+      currparameter.par_name,
+      currentry,
+      currentry?.id
+    ).then((data) => {
+      console.log("The data is: ", data);
+      setterminaldetails(data);
+      setBasicModal(false);
+      setcurrententry(null);
+    });
+  };
   return (
-    <div className="view-terminal-container">
-
-      {/* <h1 className="text-center title-padding">Hello user, you can now edit the variables of {contextuser[0]?.BankName}</h1>
-        {bankdetails?.parameters.map((param) => {
-          return (
-            <>
-            <MDBAccordion initialActive={0} className="my-3">
-              <MDBAccordionItem collapseId={1} headerTitle={param?.par_name}>
-                {param.variables.map((vari) => {
-                  // setvariable(vari);
-                  return (
-                    <div className="mx-auto set-width" >
-                      <span>{vari.var_name} : </span>
-                      <input value={vari.value} readOnly  />
-                      <MDBBtn className="btn-gap"
-                        onClick={() => {
-                          toggleShow(param, vari);
-                        }} 
-                      >
-                        Update
-                      </MDBBtn>
-                      <br />
-                      <br />
-                    </div>
-                  );
-                })}
-                <br />
-                <br />
-              </MDBAccordionItem>
-            </MDBAccordion>
-            </>
-          );
-        })} */}
-
-      <>
-        <MDBTabs className='mb-3 param-tabs'>
-          {contextterminal[0]?.tparameters.map((tparam) => {
+    <div className="viewandupdateterminal_container">
+      <h4>View TID {tid}</h4>
+      <br />
+      {/* Tabs Heading --> Displaying Parameters */}
+      <div className="params_container">
+        <MDBTabs>
+          {terminaldetails?.tparameters.map((parameter) => {
             return (
-              <>
-                <MDBTabsItem>
-                  <MDBTabsLink onClick={() => handleBasicClick(`${tparam.par_name}`)} active={basicActive === `${tparam.par_name}`}>
-                    {tparam.par_name}
-                  </MDBTabsLink>
-                </MDBTabsItem>
-              </>
+              <MDBTabsItem>
+                <MDBTabsLink
+                  onClick={() => handleBasicClick(parameter)}
+                  active={basicActive === parameter.par_name}
+                >
+                  {parameter.par_name}
+                </MDBTabsLink>
+              </MDBTabsItem>
             );
           })}
         </MDBTabs>
-        {contextterminal[0]?.tparameters.map((tparam) => {
-          return (
-            <>
-              <MDBTabsContent>
-                <MDBTabsPane show={basicActive === `${tparam.par_name}`}>
-                  {tparam.variables?.map((vari) => {
+        <MDBTabsContent className="tabs_content">
+          {terminaldetails?.tparameters.map((parameter) => {
+            return (
+              // <>{parameter.par_name}</>
+              <MDBTabsPane show={basicActive === parameter.par_name}>
+                <MDBAccordion>
+                  {parameter.variables.map((vari, index) => {
                     return (
                       <>
-                        <h5>{vari.var_name}</h5>
-                        <MDBTable className="var-table">
-                          <MDBTableHead>
-                            <tr className="text-center">
-                              <th scope="col">Variable</th>
-                              <th scope="col">Minimum Size</th>
-                              <th scope="col">Maximum Size</th>
-                              <th scope="col">Value</th>
-                            </tr>
-                          </MDBTableHead>
-                          <MDBTableBody>
-                            {vari.entries?.map((entry, index) => {
-                              return (
-                                <>
-                                  {index >= (page - 1) * 5 && index <= page * 5 - 1 ? (
-                                    <tr className="text-center">
-                                      <td>{vari.var_name}</td>
-                                      <td>{vari.min_size}</td>
-                                      <td>{vari.max_size}</td>
-                                      <td>{entry.value}</td>
-                                      <td><MDBBtn onClick={()=>{
-                                        toggleShowPopupEntry(entry)
-                                    }}>EDIT</MDBBtn></td>
-                                    </tr>) : (
-                                    <></>
-                                  )}
-                                </>
-                              );
-                            })}
-                          </MDBTableBody>
-                        </MDBTable>
-                        <MDBBtn onClick={() => AddEntry(tparam)}>
-                          Add Entry
-                        </MDBBtn>
-
-                        {/* PopUp for Creating an Updating Entry */}
-                        <MDBModal
-                          show={basicModalEntry}
-                          setShow={setBasicModalEntry}
-                          tabIndex="-1"
+                        <MDBAccordionItem
+                          collapseId={index + 1}
+                          headerTitle={vari.var_name}
                         >
-                          <MDBModalDialog>
-                            <MDBModalContent>
-                              <MDBModalHeader>
-                                <MDBModalTitle>Update Entry</MDBModalTitle>
-                                <MDBBtn
-                                  className="btn-close"
-                                  color="none"
-                                  onClick={toggleShowPopupEntry}
-                                ></MDBBtn>
-                              </MDBModalHeader>
-                              <MDBModalBody>
-                                <MDBInput
-                                  label="Enter Value"
-                                  id="Value"
-                                  type="text"
-                                  value={currvariable_value}
-                                  onChange={(e) =>
-                                    {
-                                      setCurrVariable_value(e.target.value);
-                                    }
-                                  }
-                                />
-                                <br />
-                              </MDBModalBody>
-                              <MDBModalFooter>
-                                <MDBBtn color="secondary" onClick={()=>{
-                                  setBasicModalEntry(!basicModalEntry);
-                                }}>
-                                  Close
-                                </MDBBtn>
-                                <MDBBtn
-                                  onClick={() => {
-                                    UpdateEntry(tparam);
-                                  }}
-                                >
-                                  Save changes
-                                </MDBBtn>
-                              </MDBModalFooter>
-                            </MDBModalContent>
-                          </MDBModalDialog>
-                        </MDBModal> 
-
-
-                        <ReactPaginate className="pagination"
-                          nextLabel="next >"
-                          onPageChange={(e) => {
-                            NextPage(e);
-                          }}
-                          pageRangeDisplayed={5}
-                          marginPagesDisplayed={2}
-                          pageCount={Math.ceil(vari.entries.length / 5)}
-                          previousLabel="< previous"
-                          pageClassName="page-item"
-                          pageLinkClassName="page-link"
-                          previousClassName="page-item"
-                          previousLinkClassName="page-link"
-                          nextClassName="page-item"
-                          nextLinkClassName="page-link"
-                          breakLabel="..."
-                          breakClassName="page-item"
-                          breakLinkClassName="page-link"
-                          containerClassName="pagination"
-                          activeClassName="active"
-                          renderOnZeroPageCount={null}
-                        />
+                          <MDBTable>
+                            <MDBTableHead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Maximum Size</th>
+                                <th scope="col">Minimum Size</th>
+                                <th scope="col">Value</th>
+                                <th scope="col"></th>
+                              </tr>
+                            </MDBTableHead>
+                            <MDBTableBody>
+                              {vari.entries.map((entry, index) => {
+                                return (
+                                  <>
+                                    {index >= (page - 1) * 3 &&
+                                    index <= page * 3 - 1 ? (
+                                      <tr>
+                                        <th scope="row">{index + 1}</th>
+                                        <td>{entry.max_size}</td>
+                                        <td>{entry.min_size}</td>
+                                        <td>{entry.value}</td>
+                                        <td>
+                                          <MDBIcon
+                                            fas
+                                            icon="pen"
+                                            className="edit_icon"
+                                            onClick={() => {
+                                              toggleShow(entry);
+                                            }}
+                                          />
+                                        </td>
+                                      </tr>
+                                    ) : (
+                                      <></>
+                                    )}
+                                  </>
+                                );
+                              })}
+                            </MDBTableBody>
+                          </MDBTable>
+                          <div className="add_entry_pagination">
+                            {/* <button>Add Entry</button> */}
+                            <MDBBtn
+                              onClick={() => {
+                                AddTheEntry(vari);
+                              }}
+                            >
+                              Add Entry
+                            </MDBBtn>
+                            <ReactPaginate
+                              nextLabel="next >"
+                              onPageChange={(e) => {
+                                NextPage(e);
+                              }}
+                              pageRangeDisplayed={5}
+                              marginPagesDisplayed={2}
+                              pageCount={Math.ceil(vari.entries.length / 3)}
+                              previousLabel="< previous"
+                              pageClassName="page-item"
+                              pageLinkClassName="page-link"
+                              previousClassName="page-item"
+                              previousLinkClassName="page-link"
+                              nextClassName="page-item"
+                              nextLinkClassName="page-link"
+                              breakLabel="..."
+                              breakClassName="page-item"
+                              breakLinkClassName="page-link"
+                              containerClassName="pagination"
+                              activeClassName="active"
+                              renderOnZeroPageCount={null}
+                            />
+                          </div>
+                        </MDBAccordionItem>
                       </>
                     );
                   })}
-                </MDBTabsPane>
-              </MDBTabsContent>
-            </>
-          );
-        })}
-      </>
+                </MDBAccordion>
+              </MDBTabsPane>
+            );
+          })}
+        </MDBTabsContent>
+      </div>
 
-
-
-      {/* PopUp for editing */}
+      {/* For PopUp */}
       <MDBModal show={basicModal} setShow={setBasicModal} tabIndex="-1">
         <MDBModalDialog>
           <MDBModalContent>
             <MDBModalHeader>
-              <MDBModalTitle>Modal title</MDBModalTitle>
+              <MDBModalTitle>Edit the value of the Entry</MDBModalTitle>
               <MDBBtn
                 className="btn-close"
                 color="none"
-                onClick={() => setBasicModal(false)}
+                onClick={() => {
+                  setBasicModal(false);
+                }}
               ></MDBBtn>
             </MDBModalHeader>
             <MDBModalBody>
-              {variable.var_name} :{" "}
-              <input
-                value={variable.value}
-                onChange={(e) =>
-                  setvariable({ ...variable, value: e.target.value })
-                }
+              <MDBInput
+                id="entry_value"
+                type="text"
+                value={currentry?.value}
+                onChange={(e) => {
+                  setcurrententry({ ...currentry, value: e.target.value });
+                }}
               />
             </MDBModalBody>
 
             <MDBModalFooter>
-              <MDBBtn color="secondary" onClick={() => setBasicModal(false)}>
+              <MDBBtn color="secondary" onClick={()=>{setBasicModal(false);}}>
                 Close
               </MDBBtn>
-              <MDBBtn
-                onClick={() => {
-                  updatethevariable();
-                }}
-              >
-                Save changes
-              </MDBBtn>
+              <MDBBtn onClick={()=>{editEntry()}} >Save changes</MDBBtn>
             </MDBModalFooter>
           </MDBModalContent>
         </MDBModalDialog>

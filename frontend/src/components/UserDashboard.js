@@ -127,7 +127,7 @@ function AddTerminal() {
                       {index >= (page - 1) * 5 && index <= page * 5 - 1 ? (
                         <tr>
                           {/* <th scope="row"><Link to={`/${terminal.tid}`}>{terminal.tid}</Link></th> */}
-                          <th scope="row"><Link to={`view_terminal`} 
+                          <th scope="row"><Link to={`/user/${terminal.tid}`} 
                             onClick={() => {
                               contextterminal[1](terminal);
                               console.log("the terminal is:", contextterminal[0]);
