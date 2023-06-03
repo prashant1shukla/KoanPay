@@ -53,7 +53,7 @@ function App() {
                     path="/define_struct"
                     element={[<Navbar />, <DefineStruct />, <Footer />]}
                   />
-                  <Route path="/user/view_terminal" element={[<Navbar />, <BreadcrumbView />, <ViewAndUpdateTerminal/>, <Footer />]} />
+                  <Route path="/user/:tid" element={[<Navbar />, <BreadcrumbView />, <ViewAndUpdateTerminal/>, <Footer />]} />
                   <Route
                     path="/create_bank"
                     element={[<Navbar />, <CreateBank />, <Footer />]}

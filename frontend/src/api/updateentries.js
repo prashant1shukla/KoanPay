@@ -9,5 +9,5 @@ export const updateentry= async(bank,tid,parameter,variable,id)=>{
         variable:variable,
         id:id,
     })
-    return res.data;
+    return res.data.updatedterminal;
 }

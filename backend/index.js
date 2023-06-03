@@ -47,7 +47,6 @@ app.post("/register", async (req, res) => {
 app.post("/login-user", async (req, res) => {
   const { email, password } = req.body;
   try {
-
     const user = await User.findOne({ email });
     if (!user) {
       return res.json({ error: "User Not Found" });
@@ -172,7 +171,7 @@ app.post("/updatestructure", async (req, res) => {
     }
   );
   res.send({
-    status: "Updated"
+    status: "Updated",
   });
 });
 
@@ -227,7 +226,7 @@ app.post("/updateVariable", async (req, res) => {
     user: user,
     parameter: parameter,
     prevvar: prevparams[par_index].variables[var_index],
-    newvar:variable
+    newvar: variable,
   };
   prevlogs.push(newlog);
   prevparams[par_index].variables[var_index] = variable;
@@ -238,14 +237,14 @@ app.post("/updateVariable", async (req, res) => {
     {
       $set: {
         parameters: prevparams,
-        logs:prevlogs
+        logs: prevlogs,
       },
     }
   );
   bankindb = await Bank.find({ bank: bank });
   res.send({
     status: "updated",
-    details:bankindb[0]
+    details: bankindb[0],
   });
 });
 
@@ -258,13 +257,12 @@ app.get("/getAllStructs", async (req, res) => {
   });
 });
 
-
 //TERMINAL:
 // Creating Terminal
 require("./Schema/terminal");
 const Terminal = mongoose.model("Terminal");
 app.post("/create-terminal", async (req, res) => {
-  const {tid, mid} = req.body;
+  const { tid, mid } = req.body;
   try {
     const oldTerminal = await Terminal.findOne({ tid });
     if (oldTerminal) {
@@ -280,25 +278,23 @@ app.post("/create-terminal", async (req, res) => {
   }
 });
 
-
 // Getting terminal details
-app.get("/tid-details", async(req, res)=>{
+app.get("/tid-details", async (req, res) => {
   // const{bank, tid}=req.headers.authorization;
-  var headers=req.headers.authorization;
-  headers=JSON.parse(headers);
-  
-  console.log("this is the terminal bank",headers.bank, headers.tid);
-  const bankindb= await Bank.findOne({ bank: headers.bank });
-  bankindb.terminals.map((terminal)=>{
-    if (terminal.tid===headers.tid){
-      res.send({status:"ok", data:terminal});
+  var headers = req.headers.authorization;
+  headers = JSON.parse(headers);
+  // console.log("this is the terminal bank", headers.bank, headers.tid);
+  const bankindb = await Bank.findOne({ bank: headers.bank });
+  var flag = 0;
+  bankindb.terminals.map((terminal) => {
+    if (terminal.tid === headers.tid) {
+      flag=1;
+      res.send({ status: "ok", data: terminal });
     }
-  })
-  res.send({status:"error"});
+  });
+  if(flag===0)
+    res.send({ status: "error" });
 });
-
-
-
 
 // Adding User to Bank
 app.post("/adduser", async (req, res) => {
@@ -344,96 +340,107 @@ app.get("/getBankdetails", async (req, res) => {
   });
 });
 
-
 // Adding an Entity
-app.post("/add-entry",async (req,res)=>{
-  const {bank,tid,parameter,variable} = req.body;
-  var bankindb = await Bank.findOne({bank:bank});
-  var tid_index,param_index,var_index,entity;
-  bankindb?.terminals.map((terminal,index_of_terminal)=>{
-    if(terminal.tid === tid){
+app.post("/add-entry", async (req, res) => {
+  const { bank, tid, parameter, variable } = req.body;
+  var bankindb = await Bank.findOne({ bank: bank });
+  var tid_index, param_index, var_index, entity;
+  bankindb?.terminals.map((terminal, index_of_terminal) => {
+    if (terminal.tid === tid) {
       tid_index = index_of_terminal;
-      terminal.tparameters.map((param,index_of_param)=>{
-        if(param.par_name === parameter){
+      terminal.tparameters.map((param, index_of_param) => {
+        if (param.par_name === parameter) {
           param_index = index_of_param;
-          param.variables.map((vari,index_of_var)=>{
-            if(vari.var_name == variable){
+          param.variables.map((vari, index_of_var) => {
+            if (vari.var_name == variable) {
               var_index = index_of_var;
               entity = {
                 var_name: vari.var_name,
                 max_size: vari.max_size,
-                min_size : vari.min_size,
+                min_size: vari.min_size,
                 value: vari.value,
-              }
+              };
               return;
             }
             return;
-          })
+          });
           return;
         }
-      })
+      });
     }
-  })
+  });
   var terminals = bankindb.terminals;
-  var prev_entries = terminals[tid_index].tparameters[param_index].variables[var_index].entries;
+  var prev_entries =
+    terminals[tid_index].tparameters[param_index].variables[var_index].entries;
   prev_entries.push(entity);
   var len = prev_entries.length;
-  prev_entries[len-1]["id"] = len;
-  terminals[tid_index].tparameters[param_index].variables[var_index].entries = prev_entries;
-  await Bank.updateOne({
-    bank:bank
-  },{
-    $set:{
-      terminals:terminals
+  prev_entries[len - 1]["id"] = len;
+  terminals[tid_index].tparameters[param_index].variables[var_index].entries =
+    prev_entries;
+  await Bank.updateOne(
+    {
+      bank: bank,
+    },
+    {
+      $set: {
+        terminals: terminals,
+      },
     }
-  })
+  );
   res.send({
-    status:"OK"
-  })
-})
+    status: "OK",
+    updatedterminal:terminals[tid_index]
+  });
+});
 
 //Updating Entry
-app.post("/update-entry",async (req,res)=>{
-  const {bank,tid,parameter,variable,id} = req.body;
-  var bankindb = await Bank.findOne({bank:bank});
-  var tid_index,param_index,var_index,entity_index;
-  bankindb?.terminals.map((terminal,index_of_terminal)=>{
-    if(terminal.tid === tid){
+app.post("/update-entry", async (req, res) => {
+  const { bank, tid, parameter, variable, id } = req.body;
+  var bankindb = await Bank.findOne({ bank: bank });
+  var tid_index, param_index, var_index, entity_index;
+  bankindb?.terminals.map((terminal, index_of_terminal) => {
+    if (terminal.tid === tid) {
       tid_index = index_of_terminal;
-      terminal.tparameters.map((param,index_of_param)=>{
-        if(param.par_name === parameter){
+      terminal.tparameters.map((param, index_of_param) => {
+        if (param.par_name === parameter) {
           param_index = index_of_param;
-          param.variables.map((vari, index_of_var)=>{
-            if(vari.var_name == variable.var_name){
+          param.variables.map((vari, index_of_var) => {
+            if (vari.var_name == variable.var_name) {
               var_index = index_of_var;
-              vari.entries.map((entry, index_of_entry)=>{
-                if(entry.id===id){
-                  entity_index=index_of_entry;
+              vari.entries.map((entry, index_of_entry) => {
+                if (entry.id === id) {
+                  entity_index = index_of_entry;
                   return;
                 }
-              })
+              });
               return;
             }
             return;
-          })
+          });
           return;
         }
-      })
+      });
     }
-  })
+  });
   var terminals = bankindb.terminals;
-  terminals[tid_index].tparameters[param_index].variables[var_index].entries[entity_index]=variable;
-  await Bank.updateOne({
-    bank:bank
-  },{
-    $set:{
-      terminals:terminals
+  terminals[tid_index].tparameters[param_index].variables[var_index].entries[
+    entity_index
+  ] = variable;
+  await Bank.updateOne(
+    {
+      bank: bank,
+    },
+    {
+      $set: {
+        terminals: terminals,
+      },
     }
-  })
+  );
   res.send({
-    status:"OK"
-  })
-})
+    status: "OK",
+    updatedterminal:terminals[tid_index]
+  });
+});
 
 app.listen(5000, () => {
   console.log("Server started!");
