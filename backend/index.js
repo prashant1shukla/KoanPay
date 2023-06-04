@@ -379,7 +379,7 @@ app.post("/add-entry", async (req, res) => {
 
 //Updating Entry
 app.post("/update-entry", async (req, res) => {
-  const { bank, tid, parameter, id_variable, id_entry, value } = req.body;
+  const { bank, tid, parameter, id_variable, id_entry, value, user } = req.body;
   var bankindb = await Bank.findOne({ bank: bank });
   var tid_index, param_index, var_index, entity_index;
   bankindb?.terminals.map((terminal, index_of_terminal) => {
@@ -388,15 +388,25 @@ app.post("/update-entry", async (req, res) => {
       terminal.tparameters.map((param, index_of_param) => {
         if (param.par_name === parameter) {
           param_index = index_of_param;
-          
           return;
         }
       });
     }
   });
-
   var terminals = bankindb.terminals;
+  var prev_val = terminals[tid_index].tparameters[param_index].entries[id_entry][id_variable].value;
+  var var_name = terminals[tid_index].tparameters[param_index].entries[id_entry][id_variable].var_name;
   terminals[tid_index].tparameters[param_index].entries[id_entry][id_variable].value= value;
+  var log = {
+    user:user,
+    tid:tid,
+    parameter:parameter,
+    variable: var_name,
+    prev_val:prev_val,
+    new_val: value
+  }
+  var prev_logs = bankindb.logs;
+  prev_logs.push(log);
   await Bank.updateOne(
     {
       bank: bank,
@@ -404,6 +414,7 @@ app.post("/update-entry", async (req, res) => {
     {
       $set: {
         terminals: terminals,
+        logs:prev_logs
       },
     }
   );
