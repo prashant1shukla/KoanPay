@@ -156,7 +156,7 @@ function ViewAndUpdateTerminal() {
                               </tr>
                             </MDBTableHead>
                             <MDBTableBody>
-                              {vari.entries.map((entry, index) => {
+                              {vari?.entries?.map((entry, index) => {
                                 return (
                                   <>
                                     {index >= (page - 1) * 3 &&
@@ -201,7 +201,7 @@ function ViewAndUpdateTerminal() {
                               }}
                               pageRangeDisplayed={5}
                               marginPagesDisplayed={2}
-                              pageCount={Math.ceil(vari.entries.length / 3)}
+                              pageCount={Math.ceil(vari?.entries?.length / 3)}
                               previousLabel="< previous"
                               pageClassName="page-item"
                               pageLinkClassName="page-link"

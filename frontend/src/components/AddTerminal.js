@@ -37,7 +37,6 @@ function AddTerminal() {
 
   //   popUp for adding Terminal
   const [basicModalTermi, setBasicModalTermi] = useState(false);
-
   const toggleShowPopupTermi = () => {
     setBasicModalTermi(!basicModalTermi);
   };

@@ -24,7 +24,6 @@ const User = mongoose.model("UserInfo");
 
 app.post("/register", async (req, res) => {
   const { fname, lname, email, password, usertype } = req.body;
-
   const encryptedPassword = await bcrypt.hash(password, 10);
   try {
     const oldUser = await User.findOne({ email });
@@ -286,7 +285,7 @@ app.get("/tid-details", async (req, res) => {
   // console.log("this is the terminal bank", headers.bank, headers.tid);
   const bankindb = await Bank.findOne({ bank: headers.bank });
   var flag = 0;
-  bankindb.terminals.map((terminal) => {
+  bankindb?.terminals?.map((terminal) => {
     if (terminal.tid === headers.tid) {
       flag=1;
       res.send({ status: "ok", data: terminal });
@@ -342,28 +341,15 @@ app.get("/getBankdetails", async (req, res) => {
 
 // Adding an Entity
 app.post("/add-entry", async (req, res) => {
-  const { bank, tid, parameter, variable } = req.body;
+  const { bank, tid, parameter } = req.body;
   var bankindb = await Bank.findOne({ bank: bank });
-  var tid_index, param_index, var_index, entity;
+  var tid_index, param_index
   bankindb?.terminals.map((terminal, index_of_terminal) => {
     if (terminal.tid === tid) {
       tid_index = index_of_terminal;
       terminal.tparameters.map((param, index_of_param) => {
         if (param.par_name === parameter) {
           param_index = index_of_param;
-          param.variables.map((vari, index_of_var) => {
-            if (vari.var_name == variable) {
-              var_index = index_of_var;
-              entity = {
-                var_name: vari.var_name,
-                max_size: vari.max_size,
-                min_size: vari.min_size,
-                value: vari.value,
-              };
-              return;
-            }
-            return;
-          });
           return;
         }
       });
@@ -371,12 +357,10 @@ app.post("/add-entry", async (req, res) => {
   });
   var terminals = bankindb.terminals;
   var prev_entries =
-    terminals[tid_index].tparameters[param_index].variables[var_index].entries;
-  prev_entries.push(entity);
-  var len = prev_entries.length;
-  prev_entries[len - 1]["id"] = len;
-  terminals[tid_index].tparameters[param_index].variables[var_index].entries =
-    prev_entries;
+    terminals[tid_index].tparameters[param_index].entries;
+  var currvariables= terminals[tid_index].tparameters[param_index].variables
+  prev_entries.push(currvariables);
+  terminals[tid_index].tparameters[param_index].entries= prev_entries;
   await Bank.updateOne(
     {
       bank: bank,
@@ -395,7 +379,7 @@ app.post("/add-entry", async (req, res) => {
 
 //Updating Entry
 app.post("/update-entry", async (req, res) => {
-  const { bank, tid, parameter, variable, id } = req.body;
+  const { bank, tid, parameter, id_variable, id_entry, value } = req.body;
   var bankindb = await Bank.findOne({ bank: bank });
   var tid_index, param_index, var_index, entity_index;
   bankindb?.terminals.map((terminal, index_of_terminal) => {
@@ -404,28 +388,15 @@ app.post("/update-entry", async (req, res) => {
       terminal.tparameters.map((param, index_of_param) => {
         if (param.par_name === parameter) {
           param_index = index_of_param;
-          param.variables.map((vari, index_of_var) => {
-            if (vari.var_name == variable.var_name) {
-              var_index = index_of_var;
-              vari.entries.map((entry, index_of_entry) => {
-                if (entry.id === id) {
-                  entity_index = index_of_entry;
-                  return;
-                }
-              });
-              return;
-            }
-            return;
-          });
+          
           return;
         }
       });
     }
   });
+
   var terminals = bankindb.terminals;
-  terminals[tid_index].tparameters[param_index].variables[var_index].entries[
-    entity_index
-  ] = variable;
+  terminals[tid_index].tparameters[param_index].entries[id_entry][id_variable].value= value;
   await Bank.updateOne(
     {
       bank: bank,

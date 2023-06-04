@@ -32,7 +32,7 @@ function DefineStruct() {
     max_size: "",
     min_size: "",
     value: "",
-    entries:[]
+    // entries:[]
   });
 
   // popUp for adding Variable
@@ -80,7 +80,7 @@ function DefineStruct() {
         max_size: "",
         min_size: "",
         value: "",
-        entries:[]
+        // entries:[]
       });
     });
   };
@@ -90,6 +90,7 @@ function DefineStruct() {
     var combined_curr_param = {
       par_name: currparameter_name,
       variables: [],
+      entries:[],
     };
     setCurrParameter(combined_curr_param);
     console.log("The Curr param name is : ", currparameter_name);
