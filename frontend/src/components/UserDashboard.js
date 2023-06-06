@@ -13,6 +13,8 @@ import {
   MDBModalBody,
   MDBModalFooter,
   MDBInput,
+  MDBInputGroup,
+  MDBIcon
 } from "mdb-react-ui-kit";
 import { addtermi } from "../api/addterminal";
 import ReactPaginate from "react-paginate";
@@ -39,6 +41,10 @@ function AddTerminal() {
   const [createdby, setCreatedBy] = useState("");
   const [tparameters, setTParameters] = useState(null);
   const [page, setPage] = useState(1);
+  const [Tid, setTid] = useState("");
+  const [Mid, setMid] = useState("");
+  const [MName, setMName] = useState("");
+
 
   //   popUp for adding Terminal
   const [basicModalTermi, setBasicModalTermi] = useState(false);
@@ -90,178 +96,208 @@ function AddTerminal() {
     setPage(e.selected + 1);
   };
 
+  const handleSearch = () => {
+    setTid(document.getElementById("tid").value);
+    setMid(document.getElementById("mid").value);
+    setMName(document.getElementById("m-name").value);
+  };
+
+  var index = 0, reqTermiCount = 0;
+
   return (
-    <div className="struct_container text-center">
-      <MDBBtn className="my-3"
-        onClick={() => {
-          toggleShowPopupTermi();
-        }}
+      <div className="struct_container text-center">
+        <h2>Search Terminal</h2>
+        <MDBInputGroup className="search-bar my-5">
+          <MDBInput label='TID' id="tid" type="text" className="search-bar-ele" />
+          <MDBInput label='MID' id="mid" type="text" className="search-bar-ele" />
+          <MDBInput label='Merchant Name' id="m-name" type="text" className="search-bar-ele" />
+          <MDBBtn rippleColor='dark'className="search-bar-ele" onClick={() => {
+            handleSearch();
+            console.log("The value of tid is: ", Tid);
+          }}>
+            <MDBIcon icon='search' />
+          </MDBBtn>
+        </MDBInputGroup>
+
+        <div className="terminals_container">
+          {terminals ? (
+            <>
+              {/* dispaly termianls */}
+
+              <MDBTable>
+                <MDBTableHead>
+                  <tr>
+                    <th scope="col">TID</th>
+                    <th scope="col">MID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">add1</th>
+                    <th scope="col">add2</th>
+                    <th scope="col">postal</th>
+                    <th scope="col">created by</th>
+                    <th scope="col">updated by</th>
+                    <th scope="col">creation date</th>
+                    <th scope="col">updation date</th>
+                  </tr>
+                </MDBTableHead>
+                <MDBTableBody>
+                  {terminals.map((terminal) => {
+                    if(terminal.tid === Tid || terminal.mid === Mid || terminal.name === MName) {
+                      index++;
+                      reqTermiCount++;
+                      return (
+                        <>
+                          {index - 1 >= (page - 1) * 5 && index - 1 <= page * 5 - 1 ? (
+                            <tr>
+                              {/* <th scope="row"><Link to={`/${terminal.tid}`}>{terminal.tid}</Link></th> */}
+                              <th scope="row"><Link to={`/user/${terminal.tid}`} 
+                                onClick={() => {
+                                  contextterminal[1](terminal);
+                                  console.log("the terminal is:", contextterminal[0]);
+                              }}
+                              >{terminal.tid}</Link></th>
+                              <td>{terminal.mid}</td>
+                              <td>{terminal.name}</td>
+                              <td>{terminal.add1}</td>
+                              <td>{terminal.add2}</td>
+                              <td>{terminal.postal}</td>
+                              <td>{terminal.createdby}</td>
+                              <td>{terminal.updatedby}</td>
+                              <td>{terminal.creationdate}</td>
+                              <td>{terminal.updationdate}</td>
+                            </tr>
+                          ) : (
+                            <></>
+                          )}
+                        </>
+                      );
+                    }
+                  })}
+                </MDBTableBody>
+              </MDBTable>
+              {/* <div className="text-center no-terminal-found">
+                {reqTermiCount === 0 ? (
+                    <h3>No terminals found</h3>
+                ) : <></>} 
+              </div> */}
+              <br />
+              <div className="create-termi-paginate">
+                <MDBBtn className="mb-3"
+                  onClick={() => {
+                    toggleShowPopupTermi();
+                  }}
+                  >
+                  Create Terminal
+                </MDBBtn>
+                <ReactPaginate
+                  nextLabel="next >"
+                  onPageChange={(e) => {
+                    NextPage(e);
+                  }}
+                  pageRangeDisplayed={5}
+                  marginPagesDisplayed={2}
+                  pageCount={Math.ceil(reqTermiCount / 5)}
+                  previousLabel="< previous"
+                  pageClassName="page-item"
+                  pageLinkClassName="page-link"
+                  previousClassName="page-item"
+                  previousLinkClassName="page-link"
+                  nextClassName="page-item"
+                  nextLinkClassName="page-link"
+                  breakLabel="..."
+                  breakClassName="page-item"
+                  breakLinkClassName="page-link"
+                  containerClassName="pagination"
+                  activeClassName="active"
+                  renderOnZeroPageCount={null}
+                />
+              </div>
+            </>
+          ) : (
+            <h3>No existing terminals</h3>
+          )}
+        </div>
+
+        {/* PopUp for Creating an Extra Terminal  */}
+        <MDBModal
+          show={basicModalTermi}
+          setShow={setBasicModalTermi}
+          tabIndex="-1"
         >
-        Create Terminal
-      </MDBBtn>
-      <h1 className="py-4">Search Bar</h1>
-      <div className="terminals_container">
-        {terminals ? (
-          <>
-            {/* dispaly termianls */}
-
-            <MDBTable>
-              <MDBTableHead>
-                <tr>
-                  <th scope="col">TID</th>
-                  <th scope="col">MID</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">add1</th>
-                  <th scope="col">add2</th>
-                  <th scope="col">postal</th>
-                  <th scope="col">created by</th>
-                  <th scope="col">updated by</th>
-                  <th scope="col">creation date</th>
-                  <th scope="col">updation date</th>
-                </tr>
-              </MDBTableHead>
-              <MDBTableBody>
-                {terminals.map((terminal, index) => {
-                  return (
-                    <>
-                      {index >= (page - 1) * 5 && index <= page * 5 - 1 ? (
-                        <tr>
-                          {/* <th scope="row"><Link to={`/${terminal.tid}`}>{terminal.tid}</Link></th> */}
-                          <th scope="row"><Link to={`/user/${terminal.tid}`} 
-                            onClick={() => {
-                              contextterminal[1](terminal);
-                              console.log("the terminal is:", contextterminal[0]);
-                          }}
-                          >{terminal.tid}</Link></th>
-                          <td>{terminal.mid}</td>
-                          <td>{terminal.name}</td>
-                          <td>{terminal.add1}</td>
-                          <td>{terminal.add2}</td>
-                          <td>{terminal.postal}</td>
-                          <td>{terminal.createdby}</td>
-                          <td>{terminal.updatedby}</td>
-                          <td>{terminal.creationdate}</td>
-                          <td>{terminal.updationdate}</td>
-                        </tr>
-                      ) : (
-                        <></>
-                      )}
-                    </>
-                  );
-                })}
-              </MDBTableBody>
-            </MDBTable>
-            <br />
-
-            <ReactPaginate
-              nextLabel="next >"
-              onPageChange={(e) => {
-                NextPage(e);
-              }}
-              pageRangeDisplayed={5}
-              marginPagesDisplayed={2}
-              pageCount={Math.ceil(terminals.length / 5)}
-              previousLabel="< previous"
-              pageClassName="page-item"
-              pageLinkClassName="page-link"
-              previousClassName="page-item"
-              previousLinkClassName="page-link"
-              nextClassName="page-item"
-              nextLinkClassName="page-link"
-              breakLabel="..."
-              breakClassName="page-item"
-              breakLinkClassName="page-link"
-              containerClassName="pagination"
-              activeClassName="active"
-              renderOnZeroPageCount={null}
-            />
-          </>
-        ) : (
-          <h3>No terminals</h3>
-        )}
+          <MDBModalDialog>
+            <MDBModalContent>
+              <MDBModalHeader>
+                <MDBModalTitle>Add Terminal</MDBModalTitle>
+                <MDBBtn
+                  className="btn-close"
+                  color="none"
+                  onClick={toggleShowPopupTermi}
+                ></MDBBtn>
+              </MDBModalHeader>
+              <MDBModalBody>
+                <MDBInput
+                  label="Terminal ID"
+                  id="TerminalId"
+                  type="text"
+                  value={currtid}
+                  onChange={(e) => setCurrTid(e.target.value)}
+                />
+                <br />
+                <MDBInput
+                  label="Merchant ID"
+                  id="MerchantId"
+                  type="text"
+                  value={currmid}
+                  onChange={(e) => setCurrMid(e.target.value)}
+                />
+                <br />
+                <MDBInput
+                  label="Merchant Name"
+                  id="MerchantName"
+                  type="text"
+                  value={currname}
+                  onChange={(e) => setCurrName(e.target.value)}
+                />
+                <br />
+                <MDBInput
+                  label="Address Line 1"
+                  id="AddressLine1"
+                  type="text"
+                  value={curradd1}
+                  onChange={(e) => setCurrAdd1(e.target.value)}
+                />
+                <br />
+                <MDBInput
+                  label="Address Line 2"
+                  id="AddressLine2"
+                  type="text"
+                  value={curradd2}
+                  onChange={(e) => setCurrAdd2(e.target.value)}
+                />
+                <br />
+                <MDBInput
+                  label="Postal Code"
+                  id="PostalCode"
+                  type="text"
+                  value={currpostal}
+                  onChange={(e) => setCurrPostal(e.target.value)}
+                />
+              </MDBModalBody>
+              <MDBModalFooter>
+                <MDBBtn color="secondary" onClick={toggleShowPopupTermi}>
+                  Close
+                </MDBBtn>
+                <MDBBtn
+                  onClick={() => {
+                    AddCurrTerminal();
+                  }}
+                >
+                  Save changes
+                </MDBBtn>
+              </MDBModalFooter>
+            </MDBModalContent>
+          </MDBModalDialog>
+        </MDBModal>
       </div>
-
-      {/* PopUp for Creating an Extra Terminal  */}
-      <MDBModal
-        show={basicModalTermi}
-        setShow={setBasicModalTermi}
-        tabIndex="-1"
-      >
-        <MDBModalDialog>
-          <MDBModalContent>
-            <MDBModalHeader>
-              <MDBModalTitle>Add Terminal</MDBModalTitle>
-              <MDBBtn
-                className="btn-close"
-                color="none"
-                onClick={toggleShowPopupTermi}
-              ></MDBBtn>
-            </MDBModalHeader>
-            <MDBModalBody>
-              <MDBInput
-                label="Terminal ID"
-                id="TerminalId"
-                type="text"
-                value={currtid}
-                onChange={(e) => setCurrTid(e.target.value)}
-              />
-              <br />
-              <MDBInput
-                label="Merchant ID"
-                id="MerchantId"
-                type="text"
-                value={currmid}
-                onChange={(e) => setCurrMid(e.target.value)}
-              />
-              <br />
-              <MDBInput
-                label="Merchant Name"
-                id="MerchantName"
-                type="text"
-                value={currname}
-                onChange={(e) => setCurrName(e.target.value)}
-              />
-              <br />
-              <MDBInput
-                label="Address Line 1"
-                id="AddressLine1"
-                type="text"
-                value={curradd1}
-                onChange={(e) => setCurrAdd1(e.target.value)}
-              />
-              <br />
-              <MDBInput
-                label="Address Line 2"
-                id="AddressLine2"
-                type="text"
-                value={curradd2}
-                onChange={(e) => setCurrAdd2(e.target.value)}
-              />
-              <br />
-              <MDBInput
-                label="Postal Code"
-                id="PostalCode"
-                type="text"
-                value={currpostal}
-                onChange={(e) => setCurrPostal(e.target.value)}
-              />
-            </MDBModalBody>
-            <MDBModalFooter>
-              <MDBBtn color="secondary" onClick={toggleShowPopupTermi}>
-                Close
-              </MDBBtn>
-              <MDBBtn
-                onClick={() => {
-                  AddCurrTerminal();
-                }}
-              >
-                Save changes
-              </MDBBtn>
-            </MDBModalFooter>
-          </MDBModalContent>
-        </MDBModalDialog>
-      </MDBModal>
-    </div>
   );
 }
 
