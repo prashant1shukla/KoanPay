@@ -152,6 +152,12 @@
   padding: 20px;
 }
 
+/* Search Bar */
+.search-bar {
+  justify-content: center;
+  gap: 4rem;
+}
+
 
 /* Terminal-Container */
 .terminals_container{
@@ -165,27 +171,18 @@
   /* height: 50vh; */
 }
 
-/* View and Update Terminal */ 
-.view-terminal-container {
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
+.create-termi-paginate {
+  display: flex;
+  gap: 60rem;
 }
 
-.param-tabs {
-  /* width: 40%; */
-  justify-content: center;
+.create-termi-btn {
+  margin-top: 0;
 }
 
-.var-table {
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.pagination {
-  justify-content: center;
-}
+/* .no-terminal-found {
+  margin-top: 2rem;
+} */
 
 
 /* Update and View Terminal */

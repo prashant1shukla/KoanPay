@@ -93,7 +93,7 @@ function ViewAndUpdateTerminal() {
     ).then((data) => {
       setterminaldetails(data.updatedterminal);
       var entrieslength = vari.entries.length + 1;
-      setPage(Math.ceil(entrieslength / 3));
+      setPage(Math.ceil(entrieslength / 5));
     });
   };
   // Editing an Entry
@@ -136,8 +136,8 @@ function ViewAndUpdateTerminal() {
           {terminaldetails?.tparameters.map((parameter) => {
             return (
               // <>{parameter.par_name}</>
-              <MDBTabsPane show={basicActive === parameter.par_name}>
-                <MDBAccordion>
+              <MDBTabsPane show={basicActive === parameter.par_name} className="text-center">
+                {/* <MDBAccordion>
                   {parameter.variables.map((vari, index) => {
                     return (
                       <>
@@ -186,7 +186,7 @@ function ViewAndUpdateTerminal() {
                             </MDBTableBody>
                           </MDBTable>
                           <div className="add_entry_pagination">
-                            {/* <button>Add Entry</button> */}
+                            <button>Add Entry</button>
                             <MDBBtn
                               onClick={() => {
                                 AddTheEntry(vari);
@@ -221,7 +221,70 @@ function ViewAndUpdateTerminal() {
                       </>
                     );
                   })}
-                </MDBAccordion>
+                </MDBAccordion> */}
+                <MDBTable>
+                  <MDBTableHead>
+                    <tr>
+                      {parameter.variables?.map((vari) => {
+                        return (
+                            <th scope="col">{vari.var_name}</th>
+                        );
+                      })}
+                    </tr>
+                  </MDBTableHead>
+                  <MDBTableBody>
+                    {parameter.entries?.map((entry, index) => {
+                        return (
+                          <>
+                            {index - 1 >= (page - 1) * 5 && index - 1 <= page * 5 - 1 ? (
+                              <tr>
+                                {entry?.map((entry_item) => {
+                                  return (
+                                    <td>{entry_item.value}</td>
+                                  );
+                                })}
+                                <td>
+                                  <MDBIcon
+                                    fas
+                                    icon="pen"
+                                    className="edit_icon"
+                                    onClick={() => {
+                                      toggleShow(entry);
+                                    }}
+                                  />
+                                </td>
+                              </tr>
+                            ) : (
+                              <></>
+                            )}
+                          </>
+                        );
+                    })}
+                  </MDBTableBody>
+                </MDBTable>
+
+                <ReactPaginate
+                  nextLabel="next >"
+                  onPageChange={(e) => {
+                    NextPage(e);
+                  }}
+                  pageRangeDisplayed={5}
+                  marginPagesDisplayed={2}
+                  pageCount={Math.ceil(parameter.entries.length / 5)}
+                  previousLabel="< previous"
+                  pageClassName="page-item"
+                  pageLinkClassName="page-link"
+                  previousClassName="page-item"
+                  previousLinkClassName="page-link"
+                  nextClassName="page-item"
+                  nextLinkClassName="page-link"
+                  breakLabel="..."
+                  breakClassName="page-item"
+                  breakLinkClassName="page-link"
+                  containerClassName="pagination"
+                  activeClassName="active"
+                  renderOnZeroPageCount={null}
+                />
               </MDBTabsPane>
             );
           })}
