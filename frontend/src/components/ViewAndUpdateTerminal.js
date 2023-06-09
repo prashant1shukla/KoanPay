@@ -45,6 +45,8 @@ function ViewAndUpdateTerminal() {
   const [terminaldetails, setterminaldetails] = useState(null);
   const [currparameter, setCurrentparameter] = useState(null);
   const [currentry, setcurrententry] = useState(null);
+  const [currentry_id, setCurrEntryID] = useState(null);
+  const [currvariable_id, setCurrVariableID] = useState(null);
 
   // Tabs StateVariables
   const [basicActive, setBasicActive] = useState(null);
@@ -68,9 +70,11 @@ function ViewAndUpdateTerminal() {
   // PopUp
   const [basicModal, setBasicModal] = useState(false);
 
-  const toggleShow = (entry) => {
+  const toggleShow = (entry, var_id, entry_id) => {
     setcurrententry(entry);
     setBasicModal(!basicModal);
+    setCurrEntryID(entry_id);
+    setCurrVariableID(var_id);
   };
 
   // UseEffect
@@ -84,16 +88,17 @@ function ViewAndUpdateTerminal() {
   }, []);
 
   // Adding an Entry
-  const AddTheEntry = (vari) => {
+  const AddTheEntry = (pos) => {
     addentry(
       contextuser[0].BankName,
       tid,
       currparameter.par_name,
-      vari.var_name
     ).then((data) => {
       setterminaldetails(data.updatedterminal);
-      var entrieslength = vari.entries.length + 1;
+      var entrieslength = data.updatedterminal.tparameters[pos].entries.length;
+      console.log("entries is: ", data.updatedterminal.tparameters[pos].entries);
       setPage(Math.ceil(entrieslength / 5));
+      console.log(data);
     });
   };
   // Editing an Entry
@@ -103,13 +108,17 @@ function ViewAndUpdateTerminal() {
       contextuser[0].BankName,
       tid,
       currparameter.par_name,
-      currentry,
-      currentry?.id
+      currvariable_id,
+      currentry_id,
+      currentry.value,
+      contextuser[0].email
     ).then((data) => {
       console.log("The data is: ", data);
       setterminaldetails(data);
       setBasicModal(false);
       setcurrententry(null);
+      setCurrEntryID(null);
+      setCurrVariableID(null);
     });
   };
   return (
@@ -133,7 +142,7 @@ function ViewAndUpdateTerminal() {
           })}
         </MDBTabs>
         <MDBTabsContent className="tabs_content">
-          {terminaldetails?.tparameters.map((parameter) => {
+          {terminaldetails?.tparameters.map((parameter, param_index) => {
             return (
               // <>{parameter.par_name}</>
               <MDBTabsPane show={basicActive === parameter.par_name} className="text-center">
@@ -233,17 +242,20 @@ function ViewAndUpdateTerminal() {
                     </tr>
                   </MDBTableHead>
                   <MDBTableBody>
-                    {parameter.entries?.map((entry, index) => {
+                    {parameter.entries.map((entry, index) => {
+                      console.log(entry);
                         return (
                           <>
-                            {index - 1 >= (page - 1) * 5 && index - 1 <= page * 5 - 1 ? (
+                            {index >= (page - 1) * 5 && index <= page * 5 - 1 ? (
                               <tr>
-                                {entry?.map((entry_item) => {
+                                {entry?.map((entry_item, entry_item_index) => {
                                   return (
-                                    <td>{entry_item.value}</td>
+                                    <td onDoubleClick={() => {
+                                      toggleShow(entry_item, entry_item_index, index);
+                                    }}>{entry_item.value}</td>
                                   );
                                 })}
-                                <td>
+                                {/* <td>
                                   <MDBIcon
                                     fas
                                     icon="pen"
@@ -252,39 +264,49 @@ function ViewAndUpdateTerminal() {
                                       toggleShow(entry);
                                     }}
                                   />
-                                </td>
+                                </td> */}
                               </tr>
-                            ) : (
+                             ) : (
                               <></>
-                            )}
+                            )} 
                           </>
                         );
                     })}
                   </MDBTableBody>
                 </MDBTable>
-
-                <ReactPaginate
-                  nextLabel="next >"
-                  onPageChange={(e) => {
-                    NextPage(e);
-                  }}
-                  pageRangeDisplayed={5}
-                  marginPagesDisplayed={2}
-                  pageCount={Math.ceil(parameter.entries.length / 5)}
-                  previousLabel="< previous"
-                  pageClassName="page-item"
-                  pageLinkClassName="page-link"
-                  previousClassName="page-item"
-                  previousLinkClassName="page-link"
-                  nextClassName="page-item"
-                  nextLinkClassName="page-link"
-                  breakLabel="..."
-                  breakClassName="page-item"
-                  breakLinkClassName="page-link"
-                  containerClassName="pagination"
-                  activeClassName="active"
-                  renderOnZeroPageCount={null}
-                />
+                <div className="add_entry_pagination">
+                  {parameter.par_name.toUpperCase() !== "GLOBALS" ? (
+                    <MDBBtn
+                      onClick={() => {
+                          AddTheEntry(param_index);
+                      }}
+                    >
+                      Add Entry
+                    </MDBBtn>
+                  ) : (<></>)}
+                  <ReactPaginate
+                    nextLabel="next >"
+                    onPageChange={(e) => {
+                      NextPage(e);
+                    }}
+                    pageRangeDisplayed={5}
+                    marginPagesDisplayed={2}
+                    pageCount={Math.ceil(parameter.entries.length / 5)}
+                    previousLabel="< previous"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    breakLabel="..."
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link"
+                    containerClassName="pagination"
+                    activeClassName="active"
+                    renderOnZeroPageCount={null}
+                  />
+                </div>
               </MDBTabsPane>
             );
           })}
@@ -306,14 +328,11 @@ function ViewAndUpdateTerminal() {
               ></MDBBtn>
             </MDBModalHeader>
             <MDBModalBody>
-              <MDBInput
-                id="entry_value"
-                type="text"
-                value={currentry?.value}
-                onChange={(e) => {
-                  setcurrententry({ ...currentry, value: e.target.value });
-                }}
-              />
+              <MDBInput type="text" value={currentry?.value} onChange={(e) => {
+                setcurrententry({...currentry, value : e.target.value});
+              }}>
+
+              </MDBInput>
             </MDBModalBody>
 
             <MDBModalFooter>
