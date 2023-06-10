@@ -122,8 +122,8 @@ function AddTerminal() {
       <div className="struct_container text-center">
         <h2>Search Terminal</h2>
         <form className="search-bar my-5" onSubmit={(e) => {
-            e.preventDefault();
-            handleSearch();
+            e.preventDefault()
+            handleSearch()
             console.log("The value of tid is: ", Tid);
           }}>
           <MDBInput label='TID' id="tid" type="text" className="search-bar-ele" />
@@ -193,7 +193,7 @@ function AddTerminal() {
               </MDBTable>
               {/* <div className="text-center no-terminal-found">
                 {reqTermiCount === 0 ? (
-                    <h3>No terminals found</h3>
+                    <h4 className="mt-3">No terminals found</h4>
                 ) : <></>} 
               </div> */}
               
