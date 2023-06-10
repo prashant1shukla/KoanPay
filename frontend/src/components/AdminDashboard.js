@@ -58,7 +58,7 @@ function AdminDashboard() {
           <MDBBtn className="btn-util my-5 col" onClick={() => { handleShow() }}>Add user</MDBBtn>
           <MDBBtn className="btn-util my-5 col" onClick={() => { return navigate('/define_struct') }}>Define Structure</MDBBtn>
           <MDBBtn className="btn-util my-5 col" onClick={() => { }}>Edit existing structure</MDBBtn>
-          <MDBBtn className="btn-util my-5 col" onClick={() => { }}>View user logs</MDBBtn>
+          <MDBBtn className="btn-util my-5 col" onClick={() => { return navigate('/admin/user_logs') }}>View user logs</MDBBtn>
 
           <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
