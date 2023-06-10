@@ -44,6 +44,7 @@ function AddTerminal() {
   const [Tid, setTid] = useState("");
   const [Mid, setMid] = useState("");
   const [MName, setMName] = useState("");
+  // const [reqTermiCount, setReqTermiCount] = useState(0);
 
 
   //   popUp for adding Terminal
@@ -96,28 +97,33 @@ function AddTerminal() {
     setPage(e.selected + 1);
   };
 
+  var index = 0, reqTermiCount = 0;
+
   const handleSearch = () => {
     setTid(document.getElementById("tid").value);
     setMid(document.getElementById("mid").value);
     setMName(document.getElementById("m-name").value);
+    // if(reqTermiCount === 0) {
+    //   alert("No terminals found!");
+    // }
   };
 
-  var index = 0, reqTermiCount = 0;
 
   return (
       <div className="struct_container text-center">
         <h2>Search Terminal</h2>
-        <MDBInputGroup className="search-bar my-5">
-          <MDBInput label='TID' id="tid" type="text" className="search-bar-ele" />
-          <MDBInput label='MID' id="mid" type="text" className="search-bar-ele" />
-          <MDBInput label='Merchant Name' id="m-name" type="text" className="search-bar-ele" />
-          <MDBBtn rippleColor='dark'className="search-bar-ele" onClick={() => {
+        <form className="search-bar my-5" onSubmit={(e) => {
+            e.preventDefault();
             handleSearch();
             console.log("The value of tid is: ", Tid);
           }}>
+          <MDBInput label='TID' id="tid" type="text" className="search-bar-ele" />
+          <MDBInput label='MID' id="mid" type="text" className="search-bar-ele" />
+          <MDBInput label='Merchant Name' id="m-name" type="text" className="search-bar-ele" />
+          <MDBBtn rippleColor='dark'className="search-bar-ele" type="submit" >
             <MDBIcon icon='search' />
           </MDBBtn>
-        </MDBInputGroup>
+        </form>
 
         <div className="terminals_container">
           {terminals ? (
@@ -143,6 +149,8 @@ function AddTerminal() {
                   {terminals.map((terminal) => {
                     if(terminal.tid === Tid || terminal.mid === Mid || terminal.name === MName) {
                       index++;
+                      // var temp = reqTermiCount;
+                      // setReqTermiCount(temp + 1);
                       reqTermiCount++;
                       return (
                         <>
@@ -179,6 +187,7 @@ function AddTerminal() {
                     <h3>No terminals found</h3>
                 ) : <></>} 
               </div> */}
+              
               <br />
               <div className="create-termi-paginate">
                 <MDBBtn className="mb-3"
