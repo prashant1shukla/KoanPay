@@ -58,7 +58,16 @@ function AddTerminal() {
     getdetails(contextuser[0]?.BankName).then((data) => {
       setBankDetails(data?.details);
       setTerminals(data?.details.terminals);
-      setParameters(data?.details.parameters);
+      var prev_params = data?.details.parameters;
+      data?.details.parameters.map((param,index)=>{
+        var temp = param;
+        temp["entries"] = [];
+        temp["entries"].push(param.variables);
+        prev_params[index] = temp;
+        return;
+      })
+      console.log("The Params are : ", prev_params);
+      setParameters(prev_params);
     });
     setCreatedBy(contextuser[0]?.email);
   }, [contextuser]);
