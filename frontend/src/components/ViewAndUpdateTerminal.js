@@ -146,91 +146,6 @@ function ViewAndUpdateTerminal() {
             return (
               // <>{parameter.par_name}</>
               <MDBTabsPane show={basicActive === parameter.par_name} className="text-center">
-                {/* <MDBAccordion>
-                  {parameter.variables.map((vari, index) => {
-                    return (
-                      <>
-                        <MDBAccordionItem
-                          collapseId={index + 1}
-                          headerTitle={vari.var_name}
-                        >
-                          <MDBTable>
-                            <MDBTableHead>
-                              <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Maximum Size</th>
-                                <th scope="col">Minimum Size</th>
-                                <th scope="col">Value</th>
-                                <th scope="col"></th>
-                              </tr>
-                            </MDBTableHead>
-                            <MDBTableBody>
-                              {vari?.entries?.map((entry, index) => {
-                                return (
-                                  <>
-                                    {index >= (page - 1) * 3 &&
-                                    index <= page * 3 - 1 ? (
-                                      <tr>
-                                        <th scope="row">{index + 1}</th>
-                                        <td>{entry.max_size}</td>
-                                        <td>{entry.min_size}</td>
-                                        <td>{entry.value}</td>
-                                        <td>
-                                          <MDBIcon
-                                            fas
-                                            icon="pen"
-                                            className="edit_icon"
-                                            onClick={() => {
-                                              toggleShow(entry);
-                                            }}
-                                          />
-                                        </td>
-                                      </tr>
-                                    ) : (
-                                      <></>
-                                    )}
-                                  </>
-                                );
-                              })}
-                            </MDBTableBody>
-                          </MDBTable>
-                          <div className="add_entry_pagination">
-                            <button>Add Entry</button>
-                            <MDBBtn
-                              onClick={() => {
-                                AddTheEntry(vari);
-                              }}
-                            >
-                              Add Entry
-                            </MDBBtn>
-                            <ReactPaginate
-                              nextLabel="next >"
-                              onPageChange={(e) => {
-                                NextPage(e);
-                              }}
-                              pageRangeDisplayed={5}
-                              marginPagesDisplayed={2}
-                              pageCount={Math.ceil(vari?.entries?.length / 3)}
-                              previousLabel="< previous"
-                              pageClassName="page-item"
-                              pageLinkClassName="page-link"
-                              previousClassName="page-item"
-                              previousLinkClassName="page-link"
-                              nextClassName="page-item"
-                              nextLinkClassName="page-link"
-                              breakLabel="..."
-                              breakClassName="page-item"
-                              breakLinkClassName="page-link"
-                              containerClassName="pagination"
-                              activeClassName="active"
-                              renderOnZeroPageCount={null}
-                            />
-                          </div>
-                        </MDBAccordionItem>
-                      </>
-                    );
-                  })}
-                </MDBAccordion> */}
                 <MDBTable>
                   <MDBTableHead>
                     <tr>
@@ -255,16 +170,6 @@ function ViewAndUpdateTerminal() {
                                     }}>{entry_item.value}</td>
                                   );
                                 })}
-                                {/* <td>
-                                  <MDBIcon
-                                    fas
-                                    icon="pen"
-                                    className="edit_icon"
-                                    onClick={() => {
-                                      toggleShow(entry);
-                                    }}
-                                  />
-                                </td> */}
                               </tr>
                              ) : (
                               <></>
@@ -276,7 +181,7 @@ function ViewAndUpdateTerminal() {
                 </MDBTable>
                 <div className="add_entry_pagination">
                   {parameter.par_name.toUpperCase() !== "GLOBALS" ? (
-                    <MDBBtn
+                    <MDBBtn className="mb-3"
                       onClick={() => {
                           AddTheEntry(param_index);
                       }}

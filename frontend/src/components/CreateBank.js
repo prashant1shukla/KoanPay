@@ -56,19 +56,19 @@ export default function CreateBank() {
               <div className="text-center mt-5">
                 <img src="https://koanpay.com/assets/images/konpay-removebg-preview.png"
                   style={{width: '185px'}} alt="logo" />
-                <h4 className="mt-4 mb-5 pb-1">We are The Koanpay Team</h4>
+                <h4 className="mt-5 mb-4">We are The Koanpay Team</h4>
               </div>
 
-              <p className='text-center'>Hello, {userData?.fname} <b>(superuser)</b> <br></br>Please add the bank details</p>
+              <p className='text-center'>Hello, {userData?.fname} <br></br>Please add the bank details</p>
 
               <MDBInput wrapperClass='mb-4' label='Bank Name' id='field1' type='text' onChange={(e) => setBank(e.target.value)}
-            required={true}/>
+                required={true}/>
               <MDBInput wrapperClass='mb-4' label='Admin First Name' id='field2' type='text' onChange={(e) => setFirstName(e.target.value)}
-            required={true}/>
+                required={true}/>
               <MDBInput wrapperClass='mb-4' label='Admin Last Name' id='field3' type='text' onChange={(e) => setLastName(e.target.value)}
-            required={true}/>
+                required={true}/>
               <MDBInput wrapperClass='mb-4' label='Email Address' id='field4' type='email' onChange={(e) => setEmail(e.target.value)}
-            required={true}/>
+                required={true}/>
 
 
               <div className="text-center pt-1 mb-5 pb-1">
