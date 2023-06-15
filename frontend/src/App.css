@@ -83,6 +83,16 @@
 
 
 /* Superuser comp */
+.superuser_table{
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  /* height: 50vh; */
+}
 
 .superuser_container {
   background: #09c6f9;
@@ -99,7 +109,7 @@
 }
 
 .btn-util {
-  background: #2196f3;
+  background: #045de9;
 }
 
 /* CreateBank comp */
@@ -257,7 +267,8 @@
 .add_entry_pagination{
   display: flex;
   align-items: center;
-  justify-content:space-between
+  justify-content:space-between;
+  margin-top: 2.5rem;
 }
 .edit_icon:hover{
   cursor: pointer;
