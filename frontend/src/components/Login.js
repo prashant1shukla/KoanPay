@@ -45,7 +45,7 @@ export default function Login() {
 
   return (
     <div className="form-container">
-      <form className="login-form container"
+      <form className="login-form container-new"
         onSubmit={(e) => {
           handleSubmit(e);
         }}>

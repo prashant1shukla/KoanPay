@@ -59,9 +59,9 @@
   width: 100vw;
   height: 100vh;
   
-}
+} 
 
-.container {
+.container-new {
   height :fit-content;
   padding: 40px;
   width: 30%;
@@ -69,9 +69,7 @@
   margin-right: 5px;
   background-color:white;
   border-radius: 2%;
-  /* box-shadow: -20px 20px  rgb(132, 128, 128); */
-  box-shadow: 3px 8px 28px #888888
-  ;
+  box-shadow: 3px 8px 28px #888888;
 }
 .brief-koanpay{
   color: black !important;
