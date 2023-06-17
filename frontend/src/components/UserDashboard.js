@@ -120,6 +120,7 @@ function AddTerminal() {
 
   return (
       <div className="struct_container text-center">
+        <div className="struct_subcontainer">
         <h2>Search Terminal</h2>
         <form className="search-bar my-5" onSubmit={(e) => {
             e.preventDefault()
@@ -315,6 +316,7 @@ function AddTerminal() {
             </MDBModalContent>
           </MDBModalDialog>
         </MDBModal>
+      </div>
       </div>
   );
 }

@@ -123,10 +123,11 @@ function ViewAndUpdateTerminal() {
   };
   return (
     <div className="viewandupdateterminal_container">
+      <div className="params_container">
       <h4>View TID {tid}</h4>
       <br />
       {/* Tabs Heading --> Displaying Parameters */}
-      <div className="params_container">
+      
         <MDBTabs>
           {terminaldetails?.tparameters.map((parameter) => {
             return (

@@ -42,10 +42,12 @@ function UserLogs() {
 
 
     return (
-        <div className="struct_container text-center">
+        <div className="userlog-container">
+        <div className="struct_container text-center userlog-subcontainer">
             <div className="terminals_container">
                 <>
                     {/* dispaly User Logs */}
+                    <h2 className="my-4">User Logs</h2>
                     <MDBTable>
                         <MDBTableHead>
                             <tr>
@@ -114,6 +116,7 @@ function UserLogs() {
                     </div>
                 </>
             </div>
+        </div>
         </div>
     );
 }
