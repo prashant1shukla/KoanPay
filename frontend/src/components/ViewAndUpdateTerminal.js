@@ -89,17 +89,19 @@ function ViewAndUpdateTerminal() {
 
   // Adding an Entry
   const AddTheEntry = (pos) => {
-    addentry(
-      contextuser[0].BankName,
-      tid,
-      currparameter.par_name,
-    ).then((data) => {
-      setterminaldetails(data.updatedterminal);
-      var entrieslength = data.updatedterminal.tparameters[pos].entries.length;
-      console.log("entries is: ", data.updatedterminal.tparameters[pos].entries);
-      setPage(Math.ceil(entrieslength / 5));
-      console.log(data);
-    });
+    addentry(contextuser[0].BankName, tid, currparameter.par_name).then(
+      (data) => {
+        setterminaldetails(data.updatedterminal);
+        var entrieslength =
+          data.updatedterminal.tparameters[pos].entries.length;
+        console.log(
+          "entries is: ",
+          data.updatedterminal.tparameters[pos].entries
+        );
+        setPage(Math.ceil(entrieslength / 5));
+        console.log(data);
+      }
+    );
   };
   // Editing an Entry
   const editEntry = () => {
@@ -124,10 +126,10 @@ function ViewAndUpdateTerminal() {
   return (
     <div className="viewandupdateterminal_container">
       <div className="params_container">
-      <h4>View TID {tid}</h4>
-      <br />
-      {/* Tabs Heading --> Displaying Parameters */}
-      
+        <h4>View TID {tid}</h4>
+        <br />
+        {/* Tabs Heading --> Displaying Parameters */}
+
         <MDBTabs>
           {terminaldetails?.tparameters.map((parameter) => {
             return (
@@ -146,50 +148,69 @@ function ViewAndUpdateTerminal() {
           {terminaldetails?.tparameters.map((parameter, param_index) => {
             return (
               // <>{parameter.par_name}</>
-              <MDBTabsPane show={basicActive === parameter.par_name} className="text-center">
+              <MDBTabsPane
+                show={basicActive === parameter.par_name}
+                className="text-center"
+              >
                 <MDBTable>
                   <MDBTableHead>
                     <tr>
+                      <th>#</th>
                       {parameter.variables?.map((vari) => {
-                        return (
-                            <th scope="col">{vari.var_name}</th>
-                        );
+                        return <th scope="col">{vari.var_name}</th>;
                       })}
                     </tr>
                   </MDBTableHead>
                   <MDBTableBody>
                     {parameter.entries.map((entry, index) => {
                       console.log(entry);
-                        return (
-                          <>
-                            {index >= (page - 1) * 5 && index <= page * 5 - 1 ? (
-                              <tr>
+                      return (
+                        <>
+                          <tr>
+                            {index >= (page - 1) * 5 &&
+                            index <= page * 5 - 1 ? (
+                              <>
+                              <td>{index + 1}</td>
                                 {entry?.map((entry_item, entry_item_index) => {
                                   return (
-                                    <td onDoubleClick={() => {
-                                      toggleShow(entry_item, entry_item_index, index);
-                                    }}>{entry_item.value}</td>
+                                    <>
+                                      <td
+                                        onDoubleClick={() => {
+                                          toggleShow(
+                                            entry_item,
+                                            entry_item_index,
+                                            index
+                                          );
+                                        }}
+                                      >
+                                        {entry_item.value}
+                                      </td>
+                                    </>
                                   );
                                 })}
-                              </tr>
-                             ) : (
+                              </>
+                            ) : (
                               <></>
-                            )} 
-                          </>
-                        );
+                            )}
+                          </tr>
+                        </>
+                      );
                     })}
                   </MDBTableBody>
                 </MDBTable>
                 <div className="add_entry_pagination">
                   {parameter.par_name.toUpperCase() !== "GLOBALS" ? (
-                    <MDBBtn className="mb-3"
+                    <MDBBtn
+                      className="mb-3"
                       onClick={() => {
-                          AddTheEntry(param_index);
+                        AddTheEntry(param_index);
                       }}
                     >
                       Add Entry
                     </MDBBtn>
-                  ) : (<></>)}
+                  ) : (
+                    <></>
+                  )}
                   <ReactPaginate
                     nextLabel="next >"
                     onPageChange={(e) => {
@@ -234,18 +255,31 @@ function ViewAndUpdateTerminal() {
               ></MDBBtn>
             </MDBModalHeader>
             <MDBModalBody>
-              <MDBInput type="text" value={currentry?.value} onChange={(e) => {
-                setcurrententry({...currentry, value : e.target.value});
-              }}>
-
-              </MDBInput>
+              <MDBInput
+                type="text"
+                value={currentry?.value}
+                onChange={(e) => {
+                  setcurrententry({ ...currentry, value: e.target.value });
+                }}
+              ></MDBInput>
             </MDBModalBody>
 
             <MDBModalFooter>
-              <MDBBtn color="secondary" onClick={()=>{setBasicModal(false);}}>
+              <MDBBtn
+                color="secondary"
+                onClick={() => {
+                  setBasicModal(false);
+                }}
+              >
                 Close
               </MDBBtn>
-              <MDBBtn onClick={()=>{editEntry()}} >Save changes</MDBBtn>
+              <MDBBtn
+                onClick={() => {
+                  editEntry();
+                }}
+              >
+                Save changes
+              </MDBBtn>
             </MDBModalFooter>
           </MDBModalContent>
         </MDBModalDialog>
