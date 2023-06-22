@@ -279,6 +279,12 @@
 .create-termi-btn {
   margin-top: 0;
 }
+.btn_container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
 
 /* .no-terminal-found {
   margin-top: 2rem;

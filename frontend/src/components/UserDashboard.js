@@ -14,17 +14,16 @@ import {
   MDBModalFooter,
   MDBInput,
   MDBInputGroup,
-  MDBIcon
+  MDBIcon,
 } from "mdb-react-ui-kit";
 import { addtermi } from "../api/addterminal";
 import ReactPaginate from "react-paginate";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
 import { Link } from "react-router-dom";
-
-
+import { copyterminal } from "../api/copyterminal";
+import { verifytid } from "../utils/verifycurrtid";
 
 function AddTerminal() {
-  
   const contextuser = useContext(UserContext);
   const contextterminal = useContext(TerminalContext);
 
@@ -33,6 +32,7 @@ function AddTerminal() {
   const [terminals, setTerminals] = useState(null);
   const [currterminal, setCurrTerminal] = useState(null);
   const [currtid, setCurrTid] = useState("");
+  const [existingtid, setexistingtid] = useState("");
   const [currmid, setCurrMid] = useState("");
   const [currname, setCurrName] = useState("");
   const [curradd1, setCurrAdd1] = useState("");
@@ -46,7 +46,6 @@ function AddTerminal() {
   const [MName, setMName] = useState("");
   // const [reqTermiCount, setReqTermiCount] = useState(0);
 
-
   //   popUp for adding Terminal
   const [basicModalTermi, setBasicModalTermi] = useState(false);
 
@@ -54,18 +53,25 @@ function AddTerminal() {
     setBasicModalTermi(!basicModalTermi);
   };
 
+  // PopUp for Copy Terminal
+  const [basicModalCopy, setBasicModalCopy] = useState(false);
+
+  const toggleShowPopupCopy = () => {
+    setBasicModalCopy(!basicModalCopy);
+  };
+
   useEffect(() => {
     getdetails(contextuser[0]?.BankName).then((data) => {
       setBankDetails(data?.details);
       setTerminals(data?.details.terminals);
       var prev_params = data?.details.parameters;
-      data?.details.parameters.map((param,index)=>{
+      data?.details.parameters.map((param, index) => {
         var temp = param;
         temp["entries"] = [];
         temp["entries"].push(param.variables);
         prev_params[index] = temp;
         return;
-      })
+      });
       console.log("The Params are : ", prev_params);
       setParameters(prev_params);
     });
@@ -75,29 +81,35 @@ function AddTerminal() {
   //  Creating a New Terminal
   const AddCurrTerminal = () => {
     console.log("the parameters:", parameters);
-    var combined_curr_termi = {
-      tid: currtid,
-      mid: currmid,
-      name: currname,
-      createdby: createdby,
-      add1: curradd1,
-      add2: curradd2,
-      postal: currpostal,
-      tparameters: parameters,
-    };
+    verifytid(currtid, terminals).then((data) => {
+      if (data.status === "ok") {
+        var combined_curr_termi = {
+          tid: currtid,
+          mid: currmid,
+          name: currname,
+          createdby: createdby,
+          add1: curradd1,
+          add2: curradd2,
+          postal: currpostal,
+          tparameters: parameters,
+        };
 
-    // Pushing new terminal
-    setCurrTerminal(combined_curr_termi);
-    console.log("The Curr termi name is : ", currtid);
-    var prev_termis = terminals;
-    prev_termis.push(combined_curr_termi);
-    setTerminals(prev_termis);
-    console.log("The prev_termis: ", prev_termis);
-    addtermi(contextuser[0]?.BankName, prev_termis).then((res) => {
-      console.log("The response is: ", res);
-      setBasicModalTermi(!basicModalTermi);
-      setCurrTerminal(null);
-      setCurrTid("");
+        // Pushing new terminal
+        setCurrTerminal(combined_curr_termi);
+        console.log("The Curr termi name is : ", currtid);
+        var prev_termis = terminals;
+        prev_termis.push(combined_curr_termi);
+        setTerminals(prev_termis);
+        console.log("The prev_termis: ", prev_termis);
+        addtermi(contextuser[0]?.BankName, prev_termis).then((res) => {
+          console.log("The response is: ", res);
+          setBasicModalTermi(!basicModalTermi);
+          setCurrTerminal(null);
+          setCurrTid("");
+        });
+      } else {
+        alert(data.message);
+      }
     });
   };
 
@@ -106,32 +118,71 @@ function AddTerminal() {
     setPage(e.selected + 1);
   };
 
-  var index = 0, reqTermiCount = 0;
+  var index = 0,
+    reqTermiCount = 0;
 
   const handleSearch = () => {
     setTid(document.getElementById("tid").value);
     setMid(document.getElementById("mid").value);
     setMName(document.getElementById("m-name").value);
-    // if(reqTermiCount === 0) {
-    //   alert("No terminals found!");
-    // }
   };
 
+  // Copy Terminal
+  const CopyCurrTerminal = () => {
+    verifytid(currtid, terminals).then((data) => {
+      if (data.status === "ok") {
+        copyterminal(contextuser[0]?.BankName, currtid, existingtid).then(
+          (res) => {
+            if (res.status === "error") {
+              alert(res.message);
+            } else {
+              console.log("The resposne is : ", res);
+              setTerminals(res.terminals);
+              setCurrTid("");
+              setexistingtid("");
+              setBasicModalCopy(false);
+              setTid("");
+            }
+          }
+        );
+      } else {
+        alert(data.message);
+      }
+    });
+  };
 
   return (
-      <div className="struct_container text-center">
-        <div className="struct_subcontainer">
+    <div className="struct_container text-center">
+      <div className="struct_subcontainer">
         <h2>Search Terminal</h2>
-        <form className="search-bar my-5" onSubmit={(e) => {
-            e.preventDefault()
-            handleSearch()
+        <form
+          className="search-bar my-5"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSearch();
             console.log("The value of tid is: ", Tid);
-          }}>
-          <MDBInput label='TID' id="tid" type="text" className="search-bar-ele" />
-          <MDBInput label='MID' id="mid" type="text" className="search-bar-ele" />
-          <MDBInput label='Merchant Name' id="m-name" type="text" className="search-bar-ele" />
-          <MDBBtn rippleColor='dark'className="search-bar-ele" type="submit" >
-            <MDBIcon icon='search' />
+          }}
+        >
+          <MDBInput
+            label="TID"
+            id="tid"
+            type="text"
+            className="search-bar-ele"
+          />
+          <MDBInput
+            label="MID"
+            id="mid"
+            type="text"
+            className="search-bar-ele"
+          />
+          <MDBInput
+            label="Merchant Name"
+            id="m-name"
+            type="text"
+            className="search-bar-ele"
+          />
+          <MDBBtn rippleColor="dark" className="search-bar-ele" type="submit">
+            <MDBIcon icon="search" />
           </MDBBtn>
         </form>
 
@@ -157,22 +208,35 @@ function AddTerminal() {
                 </MDBTableHead>
                 <MDBTableBody>
                   {terminals.map((terminal) => {
-                    if(terminal.tid === Tid || terminal.mid === Mid || terminal.name === MName) {
+                    if (
+                      terminal.tid === Tid ||
+                      terminal.mid === Mid ||
+                      terminal.name === MName
+                    ) {
                       index++;
                       // var temp = reqTermiCount;
                       // setReqTermiCount(temp + 1);
                       reqTermiCount++;
                       return (
                         <>
-                          {index - 1 >= (page - 1) * 5 && index - 1 <= page * 5 - 1 ? (
+                          {index - 1 >= (page - 1) * 5 &&
+                          index - 1 <= page * 5 - 1 ? (
                             <tr>
                               {/* <th scope="row"><Link to={`/${terminal.tid}`}>{terminal.tid}</Link></th> */}
-                              <th scope="row"><Link to={`/user/${terminal.tid}`} 
-                                onClick={() => {
-                                  contextterminal[1](terminal);
-                                  console.log("the terminal is:", contextterminal[0]);
-                              }}
-                              >{terminal.tid}</Link></th>
+                              <th scope="row">
+                                <Link
+                                  to={`/user/${terminal.tid}`}
+                                  onClick={() => {
+                                    contextterminal[1](terminal);
+                                    console.log(
+                                      "the terminal is:",
+                                      contextterminal[0]
+                                    );
+                                  }}
+                                >
+                                  {terminal.tid}
+                                </Link>
+                              </th>
                               <td>{terminal.mid}</td>
                               <td>{terminal.name}</td>
                               <td>{terminal.add1}</td>
@@ -192,21 +256,7 @@ function AddTerminal() {
                   })}
                 </MDBTableBody>
               </MDBTable>
-              {/* <div className="text-center no-terminal-found">
-                {reqTermiCount === 0 ? (
-                    <h4 className="mt-3">No terminals found</h4>
-                ) : <></>} 
-              </div> */}
-              
-              <br />
               <div className="create-termi-paginate">
-                <MDBBtn className="mb-3"
-                  onClick={() => {
-                    toggleShowPopupTermi();
-                  }}
-                  >
-                  Create Terminal
-                </MDBBtn>
                 <ReactPaginate
                   nextLabel="next >"
                   onPageChange={(e) => {
@@ -229,6 +279,26 @@ function AddTerminal() {
                   activeClassName="active"
                   renderOnZeroPageCount={null}
                 />
+              </div>
+
+              <br />
+              <div className="btn_container">
+                <MDBBtn
+                  className="mb-3"
+                  onClick={() => {
+                    toggleShowPopupTermi();
+                  }}
+                >
+                  Create Terminal
+                </MDBBtn>
+                <MDBBtn
+                  className="mb-3"
+                  onClick={() => {
+                    toggleShowPopupCopy();
+                  }}
+                >
+                  Copy Terminal
+                </MDBBtn>
               </div>
             </>
           ) : (
@@ -316,8 +386,57 @@ function AddTerminal() {
             </MDBModalContent>
           </MDBModalDialog>
         </MDBModal>
+
+        {/* Popup for Copy terminal */}
+        <MDBModal
+          show={basicModalCopy}
+          setShow={setBasicModalCopy}
+          tabIndex="-1"
+        >
+          <MDBModalDialog>
+            <MDBModalContent>
+              <MDBModalHeader>
+                <MDBModalTitle>Copy Terminal</MDBModalTitle>
+                <MDBBtn
+                  className="btn-close"
+                  color="none"
+                  onClick={toggleShowPopupCopy}
+                ></MDBBtn>
+              </MDBModalHeader>
+              <MDBModalBody>
+                <MDBInput
+                  label="New Terminal ID"
+                  id="NTerminalId"
+                  type="text"
+                  value={currtid}
+                  onChange={(e) => setCurrTid(e.target.value)}
+                />
+                <br />
+                <MDBInput
+                  label="Existing Terminal ID"
+                  id="ETerminalId"
+                  type="text"
+                  value={existingtid}
+                  onChange={(e) => setexistingtid(e.target.value)}
+                />
+              </MDBModalBody>
+              <MDBModalFooter>
+                <MDBBtn color="secondary" onClick={toggleShowPopupTermi}>
+                  Close
+                </MDBBtn>
+                <MDBBtn
+                  onClick={() => {
+                    CopyCurrTerminal();
+                  }}
+                >
+                  Save changes
+                </MDBBtn>
+              </MDBModalFooter>
+            </MDBModalContent>
+          </MDBModalDialog>
+        </MDBModal>
       </div>
-      </div>
+    </div>
   );
 }
 
