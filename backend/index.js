@@ -277,6 +277,45 @@ app.post("/create-terminal", async (req, res) => {
   }
 });
 
+// Copy Terminal
+app.post("/copy-terminal", async (req, res) => {
+  const { bank, currtid, existingtid } = req.body;
+  console.log("The details are: ", bank,currtid,existingtid);
+  const bankindb = await Bank.findOne({ bank: bank });
+  var index = -1;
+  bankindb.terminals.map((terminal, ind) => {
+    if (terminal.tid === existingtid) {
+      index = ind;
+      return;
+    }
+  });
+  if (index === -1) {
+    res.send({
+      status: "error",
+      message: `Tid-${existingtid} Not found`,
+    });
+  }
+  let prevterminals = [...bankindb.terminals];
+  let newterminal = {...prevterminals[index]};
+  newterminal.tid = currtid;
+  prevterminals.push(newterminal)
+  await Bank.updateOne(
+    {
+      bank: bank,
+    },
+    {
+      $set: {
+        terminals: prevterminals,
+      },
+    }
+  );
+  res.send({
+    status:"ok",
+    message:"Terminal copied successfully",
+    terminals:prevterminals
+  })
+});
+
 // Getting terminal details
 app.get("/tid-details", async (req, res) => {
   // const{bank, tid}=req.headers.authorization;
@@ -287,12 +326,11 @@ app.get("/tid-details", async (req, res) => {
   var flag = 0;
   bankindb?.terminals?.map((terminal) => {
     if (terminal.tid === headers.tid) {
-      flag=1;
+      flag = 1;
       res.send({ status: "ok", data: terminal });
     }
   });
-  if(flag===0)
-    res.send({ status: "error" });
+  if (flag === 0) res.send({ status: "error" });
 });
 
 // Adding User to Bank
@@ -343,7 +381,7 @@ app.get("/getBankdetails", async (req, res) => {
 app.post("/add-entry", async (req, res) => {
   const { bank, tid, parameter } = req.body;
   var bankindb = await Bank.findOne({ bank: bank });
-  var tid_index, param_index
+  var tid_index, param_index;
   bankindb?.terminals.map((terminal, index_of_terminal) => {
     if (terminal.tid === tid) {
       tid_index = index_of_terminal;
@@ -356,11 +394,10 @@ app.post("/add-entry", async (req, res) => {
     }
   });
   var terminals = bankindb.terminals;
-  var prev_entries =
-    terminals[tid_index].tparameters[param_index].entries;
-  var currvariables= terminals[tid_index].tparameters[param_index].variables
+  var prev_entries = terminals[tid_index].tparameters[param_index].entries;
+  var currvariables = terminals[tid_index].tparameters[param_index].variables;
   prev_entries.push(currvariables);
-  terminals[tid_index].tparameters[param_index].entries= prev_entries;
+  terminals[tid_index].tparameters[param_index].entries = prev_entries;
   await Bank.updateOne(
     {
       bank: bank,
@@ -373,7 +410,7 @@ app.post("/add-entry", async (req, res) => {
   );
   res.send({
     status: "OK",
-    updatedterminal:terminals[tid_index]
+    updatedterminal: terminals[tid_index],
   });
 });
 
@@ -394,17 +431,23 @@ app.post("/update-entry", async (req, res) => {
     }
   });
   var terminals = bankindb.terminals;
-  var prev_val = terminals[tid_index].tparameters[param_index].entries[id_entry][id_variable].value;
-  var var_name = terminals[tid_index].tparameters[param_index].entries[id_entry][id_variable].var_name;
-  terminals[tid_index].tparameters[param_index].entries[id_entry][id_variable].value= value;
+  var prev_val =
+    terminals[tid_index].tparameters[param_index].entries[id_entry][id_variable]
+      .value;
+  var var_name =
+    terminals[tid_index].tparameters[param_index].entries[id_entry][id_variable]
+      .var_name;
+  terminals[tid_index].tparameters[param_index].entries[id_entry][
+    id_variable
+  ].value = value;
   var log = {
-    user:user,
-    tid:tid,
-    parameter:parameter,
+    user: user,
+    tid: tid,
+    parameter: parameter,
     variable: var_name,
-    prev_val:prev_val,
-    new_val: value
-  }
+    prev_val: prev_val,
+    new_val: value,
+  };
   var prev_logs = bankindb.logs;
   prev_logs.push(log);
   await Bank.updateOne(
@@ -414,13 +457,13 @@ app.post("/update-entry", async (req, res) => {
     {
       $set: {
         terminals: terminals,
-        logs:prev_logs
+        logs: prev_logs,
       },
     }
   );
   res.send({
     status: "OK",
-    updatedterminal:terminals[tid_index]
+    updatedterminal: terminals[tid_index],
   });
 });
 
