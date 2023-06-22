@@ -22,6 +22,8 @@ mongoose
 require("./Schema/userDetails");
 const User = mongoose.model("UserInfo");
 
+
+
 app.post("/register", async (req, res) => {
   const { fname, lname, email, password, usertype } = req.body;
   const encryptedPassword = await bcrypt.hash(password, 10);
@@ -416,7 +418,7 @@ app.post("/add-entry", async (req, res) => {
 
 //Updating Entry
 app.post("/update-entry", async (req, res) => {
-  const { bank, tid, parameter, id_variable, id_entry, value, user } = req.body;
+  const { bank, tid, parameter, id_variable, id_entry, value, user, timestamp } = req.body;
   var bankindb = await Bank.findOne({ bank: bank });
   var tid_index, param_index, var_index, entity_index;
   bankindb?.terminals.map((terminal, index_of_terminal) => {
@@ -440,6 +442,8 @@ app.post("/update-entry", async (req, res) => {
   terminals[tid_index].tparameters[param_index].entries[id_entry][
     id_variable
   ].value = value;
+
+  // Logs.....
   var log = {
     user: user,
     tid: tid,
@@ -447,6 +451,7 @@ app.post("/update-entry", async (req, res) => {
     variable: var_name,
     prev_val: prev_val,
     new_val: value,
+    timestamp:timestamp
   };
   var prev_logs = bankindb.logs;
   prev_logs.push(log);
