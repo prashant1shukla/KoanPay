@@ -19,6 +19,7 @@ import {
   MDBInput,
 } from "mdb-react-ui-kit";
 import { addparam } from "../api/addparameter";
+import { editVar } from "../api/editVarInStructure";
 
 function DefineStruct() {
   const contextuser = useContext(UserContext);
@@ -34,6 +35,12 @@ function DefineStruct() {
     value: "",
     // entries:[]
   });
+  const [basicModalEdit, setBasicModalEdit] = useState(false);
+  const [paramEdit, setParamEdit] = useState(null);
+  const [variEdit, setVariEdit] = useState(null);
+  const [toUpdate, setToUpdate] = useState("");
+  const [valueToEdit, setValueToEdit] = useState("");
+  const [minMaxCheck, setMinMaxCheck] = useState(true);
 
   // popUp for adding Variable
   const [basicModalVariable, setBasicModalVariable] = useState(false);
@@ -90,7 +97,7 @@ function DefineStruct() {
     var combined_curr_param = {
       par_name: currparameter_name,
       variables: [],
-      entries:[],
+      entries: [],
     };
     setCurrParameter(combined_curr_param);
     console.log("The Curr param name is : ", currparameter_name);
@@ -106,10 +113,54 @@ function DefineStruct() {
     });
   };
 
+  const handleDoubleClick = (par, vari, toUpdate) => {
+    setBasicModalEdit(!basicModalEdit);
+    setParamEdit(par);
+    setVariEdit(vari);
+    setToUpdate(toUpdate);
+    setMinMaxCheck(true);
+    if (toUpdate === "var_name") setValueToEdit(vari.var_name);
+    else if (toUpdate === "min_size") setValueToEdit(vari.min_size);
+    else if (toUpdate === "max_size") setValueToEdit(vari.max_size);
+    else setValueToEdit(vari.value);
+  };
+
+  const editVariable = () => {
+    console.log("trying to edit variable", valueToEdit);
+    if (toUpdate === "value") {
+      if (
+        valueToEdit.length >= variEdit.min_size &&
+        valueToEdit.length <= variEdit.max_size
+      ) {
+        editVar(bankDetails.bank, paramEdit, variEdit, toUpdate, valueToEdit)
+          .then((data) => {
+            console.log("the data is ", data);
+            setParameters(data);
+            setBasicModalEdit(false);
+          })
+          .catch((err) => {
+            alert("Oops! An error occurred. Please try again...");
+          });
+      } else setMinMaxCheck(false);
+    } else {
+      editVar(bankDetails.bank, paramEdit, variEdit, toUpdate, valueToEdit)
+        .then((data) => {
+          console.log("the data is ", data);
+          setParameters(data);
+          setBasicModalEdit(false);
+        })
+        .catch((err) => {
+          alert("Oops! An error occurred. Please try again...");
+        });
+    }
+  };
+
   return (
     <div className="define-struct-container">
       <div className="define-struct-subcontainer">
-        <h1 className="text-center title-padding">Create the structure of {contextuser[0]?.BankName}</h1>
+        <h1 className="text-center title-padding">
+          Create the structure of {contextuser[0]?.BankName}
+        </h1>
         {parameters ? (
           <>
             <MDBAccordion className="accordion-gap">
@@ -117,7 +168,7 @@ function DefineStruct() {
                 return (
                   <MDBAccordionItem
                     collapseId={index + 1}
-                    headerTitle={par?.par_name} 
+                    headerTitle={par?.par_name}
                   >
                     <MDBTable hover responsive>
                       <MDBTableHead>
@@ -132,10 +183,35 @@ function DefineStruct() {
                         {par?.variables.map((vari) => {
                           return (
                             <tr>
-                              <th scope="row">{vari.var_name}</th>
-                              <td>{vari.min_size}</td>
-                              <td>{vari.max_size}</td>
-                              <td>{vari.value}</td>
+                              <th
+                                scope="row"
+                                onDoubleClick={() =>
+                                  handleDoubleClick(par, vari, "var_name")
+                                }
+                              >
+                                {vari.var_name}
+                              </th>
+                              <td
+                                onDoubleClick={() =>
+                                  handleDoubleClick(par, vari, "min_size")
+                                }
+                              >
+                                {vari.min_size}
+                              </td>
+                              <td
+                                onDoubleClick={() =>
+                                  handleDoubleClick(par, vari, "max_size")
+                                }
+                              >
+                                {vari.max_size}
+                              </td>
+                              <td
+                                onDoubleClick={() =>
+                                  handleDoubleClick(par, vari, "value")
+                                }
+                              >
+                                {vari.value}
+                              </td>
                             </tr>
                           );
                         })}
@@ -217,7 +293,7 @@ function DefineStruct() {
                   onChange={(e) =>
                     setVariable({ ...variable, value: e.target.value })
                   }
-                  />
+                />
               </MDBModalBody>
               <MDBModalFooter>
                 <MDBBtn color="secondary" onClick={toggleShowPopupVariable}>
@@ -234,6 +310,7 @@ function DefineStruct() {
             </MDBModalContent>
           </MDBModalDialog>
         </MDBModal>
+
         {/* PopUp for Creating an Extra Parameter */}
         <MDBModal
           show={basicModalParam}
@@ -268,6 +345,61 @@ function DefineStruct() {
                 <MDBBtn
                   onClick={() => {
                     AddCurrParameter();
+                  }}
+                >
+                  Save changes
+                </MDBBtn>
+              </MDBModalFooter>
+            </MDBModalContent>
+          </MDBModalDialog>
+        </MDBModal>
+
+        {/* Popup for editing */}
+        <MDBModal
+          show={basicModalEdit}
+          setShow={setBasicModalEdit}
+          tabIndex="-1"
+        >
+          <MDBModalDialog>
+            <MDBModalContent>
+              <MDBModalHeader>
+                <MDBModalTitle>Edit {toUpdate}</MDBModalTitle>
+                <MDBBtn
+                  className="btn-close"
+                  color="none"
+                  onClick={() => {
+                    setBasicModalEdit(false);
+                  }}
+                ></MDBBtn>
+              </MDBModalHeader>
+              <MDBModalBody>
+                <MDBInput
+                  type="text"
+                  value={valueToEdit}
+                  onChange={(e) => {
+                    setValueToEdit(e.target.value);
+                  }}
+                ></MDBInput>
+                {!minMaxCheck && (
+                  <p className="error-msg mt-2">
+                    Value of {variEdit.var_name} should be between{" "}
+                    {variEdit.min_size} and {variEdit.max_size} characters
+                  </p>
+                )}
+              </MDBModalBody>
+
+              <MDBModalFooter>
+                <MDBBtn
+                  color="secondary"
+                  onClick={() => {
+                    setBasicModalEdit(false);
+                  }}
+                >
+                  Close
+                </MDBBtn>
+                <MDBBtn
+                  onClick={() => {
+                    editVariable();
                   }}
                 >
                   Save changes

@@ -12,12 +12,11 @@ import {
   MDBCardImage,
   MDBRipple,
   MDBBtn,
-  MDBInput
-} from 'mdb-react-ui-kit';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+  MDBInput,
+} from "mdb-react-ui-kit";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 import { getdetails } from "../api/getbankdetails";
-
 
 function AdminDashboard() {
   let navigate = useNavigate();
@@ -45,18 +44,18 @@ function AdminDashboard() {
     let combineduser = {
       fname: userfname,
       lname: userlname,
-      email: useremail
-    }
+      email: useremail,
+    };
     adduser(contextuser[0]?.BankName, combineduser).then((data) => {
       console.log("The status is, ", data);
-    })
-  }
+    });
+  };
   useEffect(() => {
     getdetails(contextuser[0]?.BankName).then((data) => {
       setBankDetails(data?.details);
       console.log("this is the data", bankdetails);
     });
-  },[contextuser]);
+  }, [contextuser]);
   /*
     api-folder
       ->addparameter.js -> Adding Parameter or Updating the structure 
@@ -65,34 +64,71 @@ function AdminDashboard() {
   return (
     <div className="admin_container">
       <div className="admin_subcontainer text-center">
-        <h1 className="pt-5">Hello, {contextuser[0]?.fname} <b>(admin)</b></h1>
+        <h1 className="pt-5">Hello, {contextuser[0]?.fname}</h1>
         <div className=" gap-5 mx-auto row-width">
           <MDBCard>
-            <MDBRipple rippleColor='light' rippleTag='div' className='bg-image hover-overlay'>
-              <MDBCardImage className="admin-images" src='adduser.png' fluid alt='...' />
+            <MDBRipple
+              rippleColor="light"
+              rippleTag="div"
+              className="bg-image hover-overlay"
+            >
+              <MDBCardImage
+                className="admin-images"
+                src="adduser.png"
+                fluid
+                alt="..."
+              />
               <a>
-                <div className='mask' style={{ backgroundColor: 'rgba(251, 251, 251, 0.15)' }}></div>
+                <div
+                  className="mask"
+                  style={{ backgroundColor: "rgba(251, 251, 251, 0.15)" }}
+                ></div>
               </a>
             </MDBRipple>
             <MDBCardBody>
-              
-              <MDBBtn className="btn-util my-5 col" onClick={() => { handleShow() }}>Add user</MDBBtn>
+              <MDBBtn
+                className="btn-util my-5 col"
+                onClick={() => {
+                  handleShow();
+                }}
+              >
+                Add user
+              </MDBBtn>
             </MDBCardBody>
           </MDBCard>
 
           <MDBCard>
-            <MDBRipple rippleColor='light' rippleTag='div' className='bg-image hover-overlay'>
-              <MDBCardImage className="admin-images" src='str.png' fluid alt='...' />
+            <MDBRipple
+              rippleColor="light"
+              rippleTag="div"
+              className="bg-image hover-overlay"
+            >
+              <MDBCardImage
+                className="admin-images"
+                src="str.png"
+                fluid
+                alt="..."
+              />
               <a>
-                <div className='mask' style={{ backgroundColor: 'rgba(251, 251, 251, 0.15)' }}></div>
+                <div
+                  className="mask"
+                  style={{ backgroundColor: "rgba(251, 251, 251, 0.15)" }}
+                ></div>
               </a>
             </MDBRipple>
             <MDBCardBody>
               {/* { */}
-                {/* bankdetails.parameters.length?( */}
-                <MDBBtn className="btn-util my-5 col" onClick={() => { return navigate('/define_struct') }}>Define Structure</MDBBtn>
-                 {/* ): */}
-                {/* <MDBBtn className="btn-util my-5 col" onClick={() => { return navigate('/define_struct') }}>Edit Existing Structure</MDBBtn>
+              {/* bankdetails.parameters.length?( */}
+              <MDBBtn
+                className="btn-util my-5 col"
+                onClick={() => {
+                  return navigate("/define_struct");
+                }}
+              >
+                Define Structure
+              </MDBBtn>
+              {/* ): */}
+              {/* <MDBBtn className="btn-util my-5 col" onClick={() => { return navigate('/define_struct') }}>Edit Existing Structure</MDBBtn>
               } */}
             </MDBCardBody>
           </MDBCard>
@@ -110,15 +146,33 @@ function AdminDashboard() {
           </MDBCard> */}
 
           <MDBCard>
-            <MDBRipple rippleColor='light' rippleTag='div' className='bg-image hover-overlay'>
-              <MDBCardImage className="admin-images" src='userlogs.png' fluid alt='...' />
+            <MDBRipple
+              rippleColor="light"
+              rippleTag="div"
+              className="bg-image hover-overlay"
+            >
+              <MDBCardImage
+                className="admin-images"
+                src="userlogs.png"
+                fluid
+                alt="..."
+              />
               <a>
-                <div className='mask' style={{ backgroundColor: 'rgba(251, 251, 251, 0.15)' }}></div>
+                <div
+                  className="mask"
+                  style={{ backgroundColor: "rgba(251, 251, 251, 0.15)" }}
+                ></div>
               </a>
             </MDBRipple>
             <MDBCardBody>
-             
-              <MDBBtn className="btn-util my-5 col" onClick={() => { return navigate('/admin/user_logs') }}>View user logs</MDBBtn>
+              <MDBBtn
+                className="btn-util my-5 col"
+                onClick={() => {
+                  return navigate("/admin/user_logs");
+                }}
+              >
+                View user logs
+              </MDBBtn>
             </MDBCardBody>
           </MDBCard>
 
@@ -135,14 +189,38 @@ function AdminDashboard() {
             <Modal.Body>
               <h4>Please enter the details of the user</h4>
 
-              <MDBInput wrapperClass='mb-4' label='User First Name' id='field2' type='text' onChange={(e) => setUserfname(e.target.value)}
-                required={true} />
-              <MDBInput wrapperClass='mb-4' label='User Last Name' id='field3' type='text' onChange={(e) => setUserlname(e.target.value)}
-                required={true} />
-              <MDBInput wrapperClass='mb-4' label='Email Address' id='field4' type='email' onChange={(e) => setUseremail(e.target.value)}
-                required={true} />
-              <MDBBtn className="btn-util my-5 col" onClick={() => { AddUser() }}>Add user</MDBBtn>
-
+              <MDBInput
+                wrapperClass="mb-4"
+                label="User First Name"
+                id="field2"
+                type="text"
+                onChange={(e) => setUserfname(e.target.value)}
+                required={true}
+              />
+              <MDBInput
+                wrapperClass="mb-4"
+                label="User Last Name"
+                id="field3"
+                type="text"
+                onChange={(e) => setUserlname(e.target.value)}
+                required={true}
+              />
+              <MDBInput
+                wrapperClass="mb-4"
+                label="Email Address"
+                id="field4"
+                type="email"
+                onChange={(e) => setUseremail(e.target.value)}
+                required={true}
+              />
+              <MDBBtn
+                className="btn-util my-5 col"
+                onClick={() => {
+                  AddUser();
+                }}
+              >
+                Add user
+              </MDBBtn>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
@@ -155,7 +233,6 @@ function AdminDashboard() {
           </Modal>
         </div>
       </div>
-
     </div>
   );
 }

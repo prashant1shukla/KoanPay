@@ -3,7 +3,6 @@
 .gradient-custom-2 {
   /* fallback for old browsers */
   background: #09c6f9;
-  
 
   /* Chrome 10-25, Safari 5.1-6 */
   background: -webkit-linear-gradient(315deg, #045de9 0%, #09c6f9 74%);
@@ -11,8 +10,6 @@
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   background: linear-gradient(315deg, #045de9 0%, #09c6f9 74%);
 }
-
-
 
 @media (min-width: 768px) {
   .gradient-form {
@@ -53,25 +50,24 @@
 
 .form-container {
   display: flex;
-  background-color:#b5efff;
+  background-color: #b5efff;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
-  
-} 
+}
 
 .container-new {
-  height :fit-content;
+  height: fit-content;
   padding: 40px;
   width: 30%;
   margin-left: 5px;
   margin-right: 5px;
-  background-color:white;
+  background-color: white;
   border-radius: 2%;
   box-shadow: 3px 8px 28px #888888;
 }
-.brief-koanpay{
+.brief-koanpay {
   color: black !important;
   height: 60% !important;
 }
@@ -79,9 +75,8 @@
   background: #449ce5;
 }
 
-
 /* Superuser comp */
-.superuser_table{
+.superuser_table {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
@@ -141,7 +136,7 @@
   /* max-width: 30%; */
 }
 
-.admin-images{
+.admin-images {
   max-width: 100%;
   max-height: 100%;
 }
@@ -161,6 +156,10 @@
   margin-left: auto;
   margin-right: auto;
   padding: 3rem;
+}
+
+.error-msg {
+  color: red;
 }
 
 .accordion-gap {
@@ -185,9 +184,8 @@
   padding-bottom: 3rem;
 }
 
-
- /* userlogs */
- .userlog-container{
+/* userlogs */
+.userlog-container {
   background: #b5efff;
   padding-top: 1.5rem;
   padding-bottom: 8rem;
@@ -247,7 +245,7 @@
   padding-top: 1.2rem;
 }
 
-.struct_container{
+.struct_container {
   padding: 20px;
 }
 
@@ -258,9 +256,8 @@
   gap: 4rem;
 }
 
-
 /* Terminal-Container */
-.terminals_container{
+.terminals_container {
   width: 97%;
   margin-left: auto;
   margin-right: auto;
@@ -279,7 +276,7 @@
 .create-termi-btn {
   margin-top: 0;
 }
-.btn_container{
+.btn_container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -290,15 +287,14 @@
   margin-top: 2rem;
 } */
 
-
 /* Update and View Terminal */
-.viewandupdateterminal_container{
+.viewandupdateterminal_container {
   /* margin:20px; */
   background: #b5efff;
   padding-top: 3rem;
   padding-bottom: 8rem;
 }
-.params_container{
+.params_container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -310,17 +306,17 @@
   margin-right: auto;
   padding: 3rem;
 }
-.tabs_content{
+.tabs_content {
   width: 80%;
   margin: auto;
   margin-top: 20px;
 }
-.add_entry_pagination{
+.add_entry_pagination {
   display: flex;
   align-items: center;
-  justify-content:space-between;
+  justify-content: space-between;
   margin-top: 2.5rem;
 }
-.edit_icon:hover{
+.edit_icon:hover {
   cursor: pointer;
 }

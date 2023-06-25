@@ -170,7 +170,7 @@ function ViewAndUpdateTerminal() {
                             {index >= (page - 1) * 5 &&
                             index <= page * 5 - 1 ? (
                               <>
-                              <td>{index + 1}</td>
+                                <td>{index + 1}</td>
                                 {entry?.map((entry_item, entry_item_index) => {
                                   return (
                                     <>
@@ -200,39 +200,41 @@ function ViewAndUpdateTerminal() {
                 </MDBTable>
                 <div className="add_entry_pagination">
                   {parameter.par_name.toUpperCase() !== "GLOBALS" ? (
-                    <MDBBtn
-                      className="mb-3"
-                      onClick={() => {
-                        AddTheEntry(param_index);
-                      }}
-                    >
-                      Add Entry
-                    </MDBBtn>
+                    <>
+                      <MDBBtn
+                        className="mb-3"
+                        onClick={() => {
+                          AddTheEntry(param_index);
+                        }}
+                      >
+                        Add Entry
+                      </MDBBtn>
+                      <ReactPaginate
+                        nextLabel="next >"
+                        onPageChange={(e) => {
+                          NextPage(e);
+                        }}
+                        pageRangeDisplayed={5}
+                        marginPagesDisplayed={2}
+                        pageCount={Math.ceil(parameter.entries.length / 5)}
+                        previousLabel="< previous"
+                        pageClassName="page-item"
+                        pageLinkClassName="page-link"
+                        previousClassName="page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="page-item"
+                        nextLinkClassName="page-link"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        containerClassName="pagination"
+                        activeClassName="active"
+                        renderOnZeroPageCount={null}
+                      />
+                    </>
                   ) : (
                     <></>
                   )}
-                  <ReactPaginate
-                    nextLabel="next >"
-                    onPageChange={(e) => {
-                      NextPage(e);
-                    }}
-                    pageRangeDisplayed={5}
-                    marginPagesDisplayed={2}
-                    pageCount={Math.ceil(parameter.entries.length / 5)}
-                    previousLabel="< previous"
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousClassName="page-item"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item"
-                    nextLinkClassName="page-link"
-                    breakLabel="..."
-                    breakClassName="page-item"
-                    breakLinkClassName="page-link"
-                    containerClassName="pagination"
-                    activeClassName="active"
-                    renderOnZeroPageCount={null}
-                  />
                 </div>
               </MDBTabsPane>
             );
@@ -245,7 +247,9 @@ function ViewAndUpdateTerminal() {
         <MDBModalDialog>
           <MDBModalContent>
             <MDBModalHeader>
-              <MDBModalTitle>Edit the value of the Entry</MDBModalTitle>
+              <MDBModalTitle>
+                Edit the value of {currentry?.var_name}
+              </MDBModalTitle>
               <MDBBtn
                 className="btn-close"
                 color="none"

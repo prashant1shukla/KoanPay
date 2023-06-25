@@ -289,7 +289,7 @@ function AddTerminal() {
                     toggleShowPopupTermi();
                   }}
                 >
-                  Create Terminal
+                  Create New Terminal
                 </MDBBtn>
                 <MDBBtn
                   className="mb-3"
@@ -297,7 +297,7 @@ function AddTerminal() {
                     toggleShowPopupCopy();
                   }}
                 >
-                  Copy Terminal
+                  Copy Existing Terminal
                 </MDBBtn>
               </div>
             </>
@@ -396,7 +396,7 @@ function AddTerminal() {
           <MDBModalDialog>
             <MDBModalContent>
               <MDBModalHeader>
-                <MDBModalTitle>Copy Terminal</MDBModalTitle>
+                <MDBModalTitle>Copy Existing Terminal</MDBModalTitle>
                 <MDBBtn
                   className="btn-close"
                   color="none"
