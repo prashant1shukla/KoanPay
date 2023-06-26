@@ -47,6 +47,7 @@ function ViewAndUpdateTerminal() {
   const [currentry, setcurrententry] = useState(null);
   const [currentry_id, setCurrEntryID] = useState(null);
   const [currvariable_id, setCurrVariableID] = useState(null);
+  const [minMaxCheck, setMinMaxCheck] = useState(true);
 
   // Tabs StateVariables
   const [basicActive, setBasicActive] = useState(null);
@@ -75,6 +76,7 @@ function ViewAndUpdateTerminal() {
     setBasicModal(!basicModal);
     setCurrEntryID(entry_id);
     setCurrVariableID(var_id);
+    setMinMaxCheck(true);
   };
 
   // UseEffect
@@ -106,22 +108,27 @@ function ViewAndUpdateTerminal() {
   // Editing an Entry
   const editEntry = () => {
     console.log(currentry);
-    updateentry(
-      contextuser[0].BankName,
-      tid,
-      currparameter.par_name,
-      currvariable_id,
-      currentry_id,
-      currentry.value,
-      contextuser[0].email
-    ).then((data) => {
-      console.log("The data is: ", data);
-      setterminaldetails(data);
-      setBasicModal(false);
-      setcurrententry(null);
-      setCurrEntryID(null);
-      setCurrVariableID(null);
-    });
+    if (
+      currentry?.value.length >= currentry?.min_size &&
+      currentry?.value.length <= currentry?.max_size
+    ) {
+      updateentry(
+        contextuser[0].BankName,
+        tid,
+        currparameter.par_name,
+        currvariable_id,
+        currentry_id,
+        currentry.value,
+        contextuser[0].email
+      ).then((data) => {
+        console.log("The data is: ", data);
+        setterminaldetails(data);
+        setBasicModal(false);
+        setcurrententry(null);
+        setCurrEntryID(null);
+        setCurrVariableID(null);
+      });
+    } else setMinMaxCheck(false);
   };
   return (
     <div className="viewandupdateterminal_container">
@@ -138,7 +145,8 @@ function ViewAndUpdateTerminal() {
                   onClick={() => handleBasicClick(parameter)}
                   active={basicActive === parameter.par_name}
                 >
-                  {parameter.par_name}
+                  <p className="param-tabs">{parameter.par_name}</p>
+                  {/* {parameter.par_name} */}
                 </MDBTabsLink>
               </MDBTabsItem>
             );
@@ -266,6 +274,12 @@ function ViewAndUpdateTerminal() {
                   setcurrententry({ ...currentry, value: e.target.value });
                 }}
               ></MDBInput>
+              {!minMaxCheck && (
+                <p className="error-msg mt-2">
+                  Value of {currentry?.var_name} should be between{" "}
+                  {currentry?.min_size} and {currentry?.max_size} characters
+                </p>
+              )}
             </MDBModalBody>
 
             <MDBModalFooter>
