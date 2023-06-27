@@ -118,22 +118,13 @@ app.post("/create-bank", async (req, res) => {
 app.post("/adduser", async (req, res) => {
   const bank = req.body.bank;
   const user = req.body.user;
+  const timestamp= req.body.timestamp;
   console.log("The bank is: ", bank);
   // Adding user in BankDB
   const bankindb = await Bank.findOne({ bank: bank });
   // console.log("The bank in DB is, ",bankindb);
   let prevuser = bankindb.users;
   prevuser.push(user.email);
-  await Bank.updateOne(
-    {
-      bank: bank,
-    },
-    {
-      $set: {
-        users: prevuser,
-      },
-    }
-  );
   // Adding user in UserDB
   await User.create({
     fname: user.fname,
@@ -143,6 +134,24 @@ app.post("/adduser", async (req, res) => {
     BankName: bank,
     password: `${bank}_${user.email}`,
   });
+  // Admin logs
+  var log={
+    type: "Added User",
+    timestamp: timestamp,
+  }
+  var prev_logs = bankindb.adminlogs;
+  prev_logs.push(log);
+  await Bank.updateOne(
+    {
+      bank: bank,
+    },
+    {
+      $set: {
+        adminlogs: prev_logs,
+        users: prevuser,
+      },
+    }
+  );
   res.send({
     status: "ok",
   });
@@ -160,14 +169,23 @@ app.get("/getBankdetails", async (req, res) => {
 
 // Adding Parameter
 app.post("/updatestructure", async (req, res) => {
-  const { bank, parameter } = req.body;
+  const { bank, parameter,timestamp } = req.body;
+  const bankindb = await Bank.findOne({ bank: bank });
+
+  var log={
+    type:"Updated the Structure",
+    timestamp:timestamp
+  }
+  var prev_logs = bankindb.adminlogs;
+  prev_logs.push(log);
   await Bank.updateOne(
     {
       bank: bank,
     },
     {
       $set: {
-        parameters: parameter,
+        adminlogs: prev_logs,
+        parameters: parameter
       },
     }
   );
@@ -201,51 +219,6 @@ app.get("/getAllBanks", async (req, res) => {
   res.send({
     status: "ok",
     banks: data,
-  });
-});
-
-// Updating the Variable in a specific Parameter
-app.post("/updateVariable", async (req, res) => {
-  const { bank, parameter, variable, user } = req.body;
-  var bankindb = await Bank.find({ bank: bank });
-  var prevparams = bankindb[0].parameters;
-  var prevlogs = bankindb[0].logs;
-  var par_index, var_index;
-  //   Updating the variable
-  prevparams.map((param, index1) => {
-    if (param.par_name === parameter) {
-      par_index = index1;
-      param.variables.map((variableindb, index2) => {
-        if (variableindb.var_name === variable.var_name) {
-          var_index = index2;
-        }
-      });
-    }
-  });
-  //   Updating the logs
-  var newlog = {
-    user: user,
-    parameter: parameter,
-    prevvar: prevparams[par_index].variables[var_index],
-    newvar: variable,
-  };
-  prevlogs.push(newlog);
-  prevparams[par_index].variables[var_index] = variable;
-  await Bank.updateOne(
-    {
-      bank: bank,
-    },
-    {
-      $set: {
-        parameters: prevparams,
-        logs: prevlogs,
-      },
-    }
-  );
-  bankindb = await Bank.find({ bank: bank });
-  res.send({
-    status: "updated",
-    details: bankindb[0],
   });
 });
 

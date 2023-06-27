@@ -10,6 +10,7 @@ import SuperuserDashboard from "./components/SuperuserDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import ViewAndUpdateTerminal from "./components/ViewAndUpdateTerminal";
 import UserLogs from "./components/UserLogs";
+import Logs from "./components/Logs";
 
 
 // Creating a Context
@@ -57,6 +58,7 @@ function App() {
                   />
                   <Route path="/user/:tid" element={[<Navbar />, <BreadcrumbView />, <ViewAndUpdateTerminal/>, <Footer />]} />
                   <Route path="/admin/user_logs" element={[<Navbar />, <UserLogs/>, <Footer />]} />
+                  <Route path="/superuser/logs" element={[<Navbar />, <Logs/>, <Footer />]} />
                   <Route
                     path="/create_bank"
                     element={[<Navbar />, <CreateBank />, <Footer />]}

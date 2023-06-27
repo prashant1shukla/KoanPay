@@ -6,6 +6,7 @@ const BankNameScehma = new mongoose.Schema(
     admin:String,
     parameters: Array,
     logs:Array,
+    adminlogs: Array,
     users:Array, 
     terminals: Array,
   },

@@ -65,7 +65,7 @@ function AdminDashboard() {
     <div className="admin_container">
       <div className="admin_subcontainer text-center">
         <h1 className="pt-5">Hello, {contextuser[0]?.fname}</h1>
-        <div className=" gap-5 mx-auto row-width">
+        <div className="gap-5 mx-auto row-width">
           <MDBCard>
             <MDBRipple
               rippleColor="light"
