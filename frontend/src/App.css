@@ -336,6 +336,9 @@
 .param-tabs {
   font-size: 0.8rem;
 }
+.log-tabs {
+  font-size: 0.8rem;
+}
 .tabs_content {
   width: 80%;
   margin: auto;
