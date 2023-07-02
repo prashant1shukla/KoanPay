@@ -22,8 +22,6 @@ mongoose
 require("./Schema/userDetails");
 const User = mongoose.model("UserInfo");
 
-
-
 app.post("/register", async (req, res) => {
   const { fname, lname, email, password, usertype } = req.body;
   const encryptedPassword = await bcrypt.hash(password, 10);
@@ -118,7 +116,7 @@ app.post("/create-bank", async (req, res) => {
 app.post("/adduser", async (req, res) => {
   const bank = req.body.bank;
   const user = req.body.user;
-  const timestamp= req.body.timestamp;
+  const timestamp = req.body.timestamp;
   console.log("The bank is: ", bank);
   // Adding user in BankDB
   const bankindb = await Bank.findOne({ bank: bank });
@@ -135,10 +133,10 @@ app.post("/adduser", async (req, res) => {
     password: `${bank}_${user.email}`,
   });
   // Admin logs
-  var log={
+  var log = {
     type: "Added User",
     timestamp: timestamp,
-  }
+  };
   var prev_logs = bankindb.adminlogs;
   prev_logs.push(log);
   await Bank.updateOne(
@@ -169,13 +167,13 @@ app.get("/getBankdetails", async (req, res) => {
 
 // Adding Parameter
 app.post("/updatestructure", async (req, res) => {
-  const { bank, parameter,timestamp } = req.body;
+  const { bank, parameter, timestamp } = req.body;
   const bankindb = await Bank.findOne({ bank: bank });
 
-  var log={
-    type:"Updated the Structure",
-    timestamp:timestamp
-  }
+  var log = {
+    type: "Updated the Structure",
+    timestamp: timestamp,
+  };
   var prev_logs = bankindb.adminlogs;
   prev_logs.push(log);
   await Bank.updateOne(
@@ -185,12 +183,58 @@ app.post("/updatestructure", async (req, res) => {
     {
       $set: {
         adminlogs: prev_logs,
-        parameters: parameter
+        parameters: parameter,
       },
     }
   );
   res.send({
     status: "Updated",
+  });
+});
+
+// Editing Var in structure
+app.post("/edit-var", async (req, res) => {
+  const { bank, currParam, variable, toUpdate, newValue, timestamp } = req.body;
+  var bankindb = await Bank.findOne({ bank: bank });
+  var param_index, var_index;
+  bankindb.parameters?.map((param, index_of_param) => {
+    if (param.par_name === currParam.par_name) {
+      param_index = index_of_param;
+      param.variables?.map((vari, index_of_vari) => {
+        if (vari.var_name === variable.var_name) {
+          var_index = index_of_vari;
+          return;
+        }
+      });
+      return;
+    }
+  });
+
+  var parameters = bankindb.parameters;
+  parameters[param_index].variables[var_index][toUpdate] = newValue;
+
+  var log = {
+    type: "Edited the Structure",
+    timestamp: timestamp,
+  };
+
+  var prev_logs = bankindb.adminlogs;
+  prev_logs.push(log);
+
+  await Bank.updateOne(
+    {
+      bank: bank,
+    },
+    {
+      $set: {
+        parameters: parameters,
+        adminlogs: prev_logs,
+      },
+    }
+  );
+  res.send({
+    status: "ok",
+    updatedParameters: parameters,
   });
 });
 
@@ -255,7 +299,7 @@ app.post("/create-terminal", async (req, res) => {
 // Copy Terminal
 app.post("/copy-terminal", async (req, res) => {
   const { bank, currtid, existingtid } = req.body;
-  console.log("The details are: ", bank,currtid,existingtid);
+  console.log("The details are: ", bank, currtid, existingtid);
   const bankindb = await Bank.findOne({ bank: bank });
   var index = -1;
   bankindb.terminals.map((terminal, ind) => {
@@ -271,9 +315,9 @@ app.post("/copy-terminal", async (req, res) => {
     });
   }
   let prevterminals = [...bankindb.terminals];
-  let newterminal = {...prevterminals[index]};
+  let newterminal = { ...prevterminals[index] };
   newterminal.tid = currtid;
-  prevterminals.push(newterminal)
+  prevterminals.push(newterminal);
   await Bank.updateOne(
     {
       bank: bank,
@@ -285,10 +329,10 @@ app.post("/copy-terminal", async (req, res) => {
     }
   );
   res.send({
-    status:"ok",
-    message:"Terminal copied successfully",
-    terminals:prevterminals
-  })
+    status: "ok",
+    message: "Terminal copied successfully",
+    terminals: prevterminals,
+  });
 });
 
 // Getting terminal details
@@ -391,7 +435,16 @@ app.post("/add-entry", async (req, res) => {
 
 //Updating Entry
 app.post("/update-entry", async (req, res) => {
-  const { bank, tid, parameter, id_variable, id_entry, value, user, timestamp } = req.body;
+  const {
+    bank,
+    tid,
+    parameter,
+    id_variable,
+    id_entry,
+    value,
+    user,
+    timestamp,
+  } = req.body;
   var bankindb = await Bank.findOne({ bank: bank });
   var tid_index, param_index, var_index, entity_index;
   bankindb?.terminals.map((terminal, index_of_terminal) => {
@@ -424,7 +477,7 @@ app.post("/update-entry", async (req, res) => {
     variable: var_name,
     prev_val: prev_val,
     new_val: value,
-    timestamp:timestamp
+    timestamp: timestamp,
   };
   var prev_logs = bankindb.logs;
   prev_logs.push(log);
